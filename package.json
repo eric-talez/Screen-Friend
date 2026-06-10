@@ -1,0 +1,13 @@
+{
+  "name": "ai-3d-demo",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Screen Friend desktop companion prototype workspace.",
+  "scripts": {
+    "typecheck": "pnpm --filter @ai-3d-demo/web typecheck && pnpm --filter @ai-3d-demo/desktop typecheck",
+    "build": "pnpm --filter @ai-3d-demo/web build",
+    "dev:web": "pnpm --filter @ai-3d-demo/web dev",
+    "dev:desktop": "pnpm --filter @ai-3d-demo/desktop dev"
+  },
+  "packageManager": "pnpm@9.15.4"
+}

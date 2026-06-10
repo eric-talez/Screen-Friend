@@ -1,0 +1,560 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Screen Friend / 화면 친구 — Desktop Companion Project Roadmap</title>
+  <style>
+    :root {
+      --bg: #0c1020;
+      --panel: #141a31;
+      --panel-2: #19213d;
+      --text: #eef3ff;
+      --muted: #aab5d4;
+      --line: rgba(255,255,255,.12);
+      --accent: #8bd3ff;
+      --accent-2: #c7a5ff;
+      --good: #7ee6a6;
+      --warn: #ffd36a;
+      --bad: #ff8a8a;
+      --code: #0b0f1d;
+      --shadow: 0 20px 60px rgba(0,0,0,.35);
+      --radius: 18px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans KR", "Apple SD Gothic Neo", Arial, sans-serif;
+      background: radial-gradient(circle at 20% 0%, rgba(139,211,255,.18), transparent 34%),
+                  radial-gradient(circle at 85% 10%, rgba(199,165,255,.16), transparent 30%),
+                  var(--bg);
+      color: var(--text);
+      line-height: 1.62;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .wrap { width: min(1180px, calc(100% - 40px)); margin: 0 auto; }
+    header.hero {
+      padding: 72px 0 36px;
+      border-bottom: 1px solid var(--line);
+    }
+    .eyebrow {
+      color: var(--accent);
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    h1 {
+      font-size: clamp(38px, 6vw, 76px);
+      line-height: 1.02;
+      margin: 14px 0 16px;
+      letter-spacing: -0.06em;
+    }
+    h2 { font-size: 30px; letter-spacing: -0.03em; margin: 0 0 16px; }
+    h3 { font-size: 21px; margin: 0 0 12px; }
+    p { margin: 0 0 12px; }
+    .subtitle { font-size: 20px; color: var(--muted); max-width: 920px; }
+    .badges { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 22px; }
+    .badge {
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.05);
+      padding: 8px 12px;
+      border-radius: 999px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    main { padding: 34px 0 72px; }
+    section { margin: 28px 0; }
+    .card {
+      background: linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.028));
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+    .grid { display: grid; gap: 18px; }
+    .grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .grid.four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    @media (max-width: 900px) { .grid.two, .grid.three, .grid.four { grid-template-columns: 1fr; } }
+    .pill-title { color: var(--accent); font-weight: 800; font-size: 13px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: .08em; }
+    .muted { color: var(--muted); }
+    .big-callout {
+      background: linear-gradient(135deg, rgba(139,211,255,.12), rgba(199,165,255,.10));
+      border: 1px solid rgba(139,211,255,.22);
+    }
+    .status-good { color: var(--good); font-weight: 800; }
+    .status-warn { color: var(--warn); font-weight: 800; }
+    .status-bad { color: var(--bad); font-weight: 800; }
+    ul, ol { margin: 8px 0 0 20px; padding: 0; }
+    li { margin: 7px 0; }
+    .table-wrap { overflow-x: auto; border-radius: 14px; border: 1px solid var(--line); }
+    table { width: 100%; border-collapse: collapse; min-width: 840px; background: rgba(10,14,28,.45); }
+    th, td { padding: 13px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+    th { color: var(--accent); text-align: left; background: rgba(255,255,255,.045); font-size: 13px; text-transform: uppercase; letter-spacing: .08em; }
+    tr:last-child td { border-bottom: none; }
+    code, pre {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+    }
+    pre {
+      background: var(--code);
+      border: 1px solid var(--line);
+      padding: 16px;
+      border-radius: 14px;
+      overflow-x: auto;
+      color: #dce7ff;
+      white-space: pre-wrap;
+    }
+    .timeline { position: relative; display: grid; gap: 16px; }
+    .timeline-item {
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.035);
+      border-radius: 16px;
+      padding: 18px;
+    }
+    .phase {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: #08111f;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      padding: 5px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 900;
+      margin-bottom: 10px;
+    }
+    .split-title { display: flex; justify-content: space-between; gap: 14px; align-items: baseline; }
+    .small { font-size: 13px; }
+    .kbd {
+      display: inline-block;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.07);
+      border-bottom-color: rgba(255,255,255,.22);
+      padding: 2px 7px;
+      border-radius: 6px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .screen-demo {
+      position: relative;
+      height: 280px;
+      border-radius: 22px;
+      background:
+        linear-gradient(180deg, rgba(111,130,171,.14), rgba(7,10,22,.88)),
+        radial-gradient(circle at 50% 80%, rgba(139,211,255,.18), transparent 35%);
+      border: 1px solid rgba(255,255,255,.18);
+      overflow: hidden;
+    }
+    .screen-demo:before {
+      content: "";
+      position: absolute;
+      inset: 18px 18px 42px;
+      border: 1px solid rgba(139,211,255,.22);
+      border-radius: 16px;
+      background: rgba(255,255,255,.035);
+    }
+    .ground {
+      position: absolute;
+      left: 0; right: 0; bottom: 38px; height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(139,211,255,.55), transparent);
+    }
+    .creature {
+      position: absolute;
+      left: 44%; bottom: 42px;
+      width: 86px; height: 46px;
+      border-radius: 60% 50% 45% 55%;
+      background: linear-gradient(135deg, #90f0c0, #6bd3ff);
+      box-shadow: 0 0 24px rgba(139,211,255,.35);
+      transform: rotate(-3deg);
+    }
+    .creature:before {
+      content: "";
+      position: absolute; left: 68px; top: 8px; width: 32px; height: 28px;
+      border-radius: 50%; background: linear-gradient(135deg, #a5ffd4, #8bd3ff);
+    }
+    .creature:after {
+      content: "Z z";
+      position: absolute; left: 104px; top: -38px; color: var(--accent); font-weight: 900;
+      animation: floatz 2.2s ease-in-out infinite;
+    }
+    @keyframes floatz { 0%,100% { transform: translateY(0); opacity: .5; } 50% { transform: translateY(-8px); opacity: 1; } }
+    .mini-note { border-left: 3px solid var(--accent); padding-left: 14px; color: var(--muted); }
+    footer { border-top: 1px solid var(--line); padding: 28px 0 50px; color: var(--muted); }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="wrap">
+      <div class="eyebrow">Project Plan · Desktop Companion MVP</div>
+      <h1>Screen Friend / 화면 친구</h1>
+      <p class="subtitle">Mac 화면 아래에 귀여운 캐릭터가 항상 위에 떠 있으면서 걸어다니고, 눕고, 졸고, 눈을 깜빡이는 desktop screen companion 앱. AI 3D 생성은 핵심 MVP가 아니라, 나중에 “내 캐릭터 만들기” 기능으로 확장한다.</p>
+      <div class="badges">
+        <span class="badge">Electron-first MVP</span>
+        <span class="badge">Transparent always-on-top overlay</span>
+        <span class="badge">Cute behavior loop</span>
+        <span class="badge">Mac-first, cross-platform later</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="card big-callout">
+      <h2>1. 최종 목표 정의</h2>
+      <p><strong>한 줄 설명:</strong> Screen Friend는 사용자의 실제 Mac 화면 위에 사는 귀여운 캐릭터다. 앱 창처럼 보이지 않고, 화면 아래쪽에 자연스럽게 떠 있으며, 사용자가 일하는 동안 조용히 움직이고 쉬고 졸고 반응한다.</p>
+      <div class="screen-demo" aria-label="Screen companion concept illustration">
+        <div class="ground"></div>
+        <div class="creature"></div>
+      </div>
+      <p class="mini-note">중요: 기존 “AI 3D Demo”는 웹페이지 안에 MacBook mockup을 만들고 그 안에 캐릭터를 보여주는 프로토타입이었다. 새 목표는 실제 desktop overlay이므로, 다음 단계부터는 Electron 기반 desktop companion 방향으로 pivot한다.</p>
+    </section>
+
+    <section class="grid two">
+      <div class="card">
+        <div class="pill-title">Core experience</div>
+        <h3>사용자가 느껴야 하는 것</h3>
+        <ul>
+          <li>캐릭터가 내 실제 화면에 사는 것처럼 느껴진다.</li>
+          <li>항상 위에 보이지만 작업을 방해하지 않는다.</li>
+          <li>화면 아래를 천천히 걷고, 멈추고, 눕고, 졸고, 눈을 깜빡인다.</li>
+          <li>가끔 마우스 근처에서 반응하거나 사용자를 바라본다.</li>
+          <li>설정은 메뉴바/tray에서 간단히 켜고 끈다.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="pill-title">Non-goals for MVP</div>
+        <h3>초기 MVP에서 하지 않을 것</h3>
+        <ul>
+          <li>이미지 업로드 → AI 3D 생성 → 실시간 변환.</li>
+          <li>Meshy/API/backend/task polling.</li>
+          <li>완성도 높은 App Store 배포.</li>
+          <li>복잡한 캐릭터 커스터마이징 UI.</li>
+          <li>처음부터 완벽한 3D rig/animation.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>2. 기술 선택</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>선택지</th><th>판단</th><th>이유</th><th>주의점</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><strong>Electron</strong></td>
+              <td><span class="status-good">MVP 추천</span></td>
+              <td>기존 React/Vite 자산을 재사용하기 쉽고, BrowserWindow로 frameless/transparent/always-on-top/click-through류 desktop window 제어가 가능하다.</td>
+              <td>앱 용량이 커질 수 있다. macOS 권한/창 레벨/전체화면 workspace 동작은 실제 기기 테스트 필요.</td>
+            </tr>
+            <tr>
+              <td><strong>Tauri</strong></td>
+              <td><span class="status-warn">나중 후보</span></td>
+              <td>가볍고 Rust 기반이라 배포 앱으로 매력적이다. 웹 프론트엔드도 재사용 가능하다.</td>
+              <td>macOS transparent window가 private API feature와 연결되어 App Store 수용성 문제가 있을 수 있다. 초기 Codex 구현 난이도도 Electron보다 높다.</td>
+            </tr>
+            <tr>
+              <td><strong>웹앱만 사용</strong></td>
+              <td><span class="status-bad">최종 목표 불가</span></td>
+              <td>브라우저 내부 데모는 가능하다.</td>
+              <td>실제 Mac 화면 위 always-on-front overlay, click-through, tray control을 구현할 수 없다.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="muted small">근거: Electron 공식 문서는 frameless window, transparent window, always-on-top, click-through mouse ignore, tray menu를 지원한다. Tauri도 window customization과 always-on-top 설정을 지원하지만, macOS transparent window는 private API 제약을 명시한다. 자세한 링크는 문서 하단 Sources 참고.</p>
+    </section>
+
+    <section class="card">
+      <h2>3. 추천 Repo 구조</h2>
+      <pre><code>화면 친구/
+  package.json
+  pnpm-workspace.yaml
+  apps/
+    web/                 # 현재 만든 AI 3D Demo prototype. 보존하되 core MVP에서는 제외.
+    desktop/             # Electron desktop companion app. 새 MVP 중심.
+  packages/
+    character-engine/    # 행동 상태 머신, 위치 이동, blink/sleep/walk scheduler.
+    character-assets/    # sprite, GLB, texture, sound 같은 asset 관리.
+    shared/              # 타입/상수/설정 schema.
+  docs/
+    product-plan.md
+    roadmap.md
+    qa-checklist.md</code></pre>
+      <p class="mini-note">처음부터 packages를 다 만들 필요는 없다. 하지만 장기적으로 renderer와 desktop shell이 분리되므로, 캐릭터 행동 로직은 package로 분리할 가치가 있다.</p>
+    </section>
+
+    <section class="card">
+      <h2>4. 핵심 시스템 설계</h2>
+      <div class="grid two">
+        <div>
+          <h3>Overlay Window Layer</h3>
+          <ul>
+            <li>transparent + frameless window</li>
+            <li>always-on-top</li>
+            <li>bottom-of-screen positioning</li>
+            <li>visible on all workspaces 옵션</li>
+            <li>click-through mode: 기본은 화면 조작 방해 최소화</li>
+            <li>character hit-area만 선택적으로 interactable</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Character Renderer</h3>
+          <ul>
+            <li>MVP: 2D sprite 또는 simple CSS/SVG/Canvas character</li>
+            <li>확장: Three/R3F + GLB character</li>
+            <li>상태별 animation: idle, walk, blink, sleep, lie, stretch</li>
+            <li>성능: 30fps 목표, idle 시 낮은 업데이트 빈도</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Behavior Engine</h3>
+          <ul>
+            <li>finite state machine: idle/walk/sleep/react</li>
+            <li>random weighted scheduler</li>
+            <li>screen bounds collision</li>
+            <li>mouse proximity reactions</li>
+            <li>user activity 기반 졸림/활동성 조정</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Settings & Control</h3>
+          <ul>
+            <li>menu bar/tray icon</li>
+            <li>show/hide companion</li>
+            <li>always-on-top toggle</li>
+            <li>click-through toggle</li>
+            <li>size/speed/personality settings</li>
+            <li>quit / launch at login은 후순위</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>5. Full Roadmap</h2>
+      <div class="timeline">
+        <div class="timeline-item">
+          <span class="phase">Pivot 0</span>
+          <h3>Project Reframe: AI 3D Demo → Screen Friend</h3>
+          <p><strong>목표:</strong> README, 앱 copy, docs를 새 제품 목표에 맞게 재정의한다. 기존 upload/generation UI는 future customization prototype으로 내린다.</p>
+          <ul><li>결과물: 새 README, roadmap, old prototype note.</li><li>검증: typecheck/build/diff check.</li></ul>
+        </div>
+        <div class="timeline-item">
+          <span class="phase">Slice 1</span>
+          <h3>Character Sandbox in Web</h3>
+          <p><strong>목표:</strong> 아직 Electron 없이 웹앱 안에서 캐릭터 행동 loop만 만든다. 화면 아래 stage에서 캐릭터가 idle/walk/blink/sleep/lie 행동을 반복한다.</p>
+          <ul><li>기존 MacBook 3D viewer는 숨기거나 prototype section으로 이동.</li><li>캐릭터 좌표, direction, action state, timer scheduler 구현.</li></ul>
+        </div>
+        <div class="timeline-item">
+          <span class="phase">Slice 2</span>
+          <h3>Electron Desktop Shell</h3>
+          <p><strong>목표:</strong> <code>apps/desktop</code> 추가. Vite renderer를 Electron 창에 띄운다. 아직 투명/always-on-top 완성 전이라도 desktop app 실행까지 만든다.</p>
+          <ul><li>main process, preload, renderer 연결.</li><li>dev/build script 정리.</li></ul>
+        </div>
+        <div class="timeline-item">
+          <span class="phase">Slice 3</span>
+          <h3>Transparent Always-on-Top Overlay</h3>
+          <p><strong>목표:</strong> 실제 Mac 화면 위에 캐릭터만 보이도록 transparent frameless overlay window를 만든다.</p>
+          <ul><li>bottom-of-screen position.</li><li>setAlwaysOnTop 적용.</li><li>background transparent.</li><li>dock/taskbar 노출 최소화 검토.</li></ul>
+        </div>
+        <div class="timeline-item">
+          <span class="phase">Slice 4</span>
+          <h3>Click-through & Interaction Mode</h3>
+          <p><strong>목표:</strong> 투명 영역은 아래 앱 클릭을 방해하지 않고, 캐릭터 영역만 hover/click 반응 가능하게 만든다.</p>
+          <ul><li>global ignore mouse mode.</li><li>character interaction toggle.</li><li>debug overlay로 hitbox 확인.</li></ul>
+        </div>
+        <div class="timeline-item">
+          <span class="phase">Slice 5</span>
+          <h3>Behavior Scheduler v1</h3>
+          <p><strong>목표:</strong> 캐릭터가 스스로 행동을 고른다. 걷기, 멈추기, 눕기, 졸기, 눈 깜빡임이 자연스럽게 loop된다.</p>
+          <ul><li>weighted random actions.</li><li>screen edge bounce.</li><li>idle timeout → sleepy → sleep.</li><li>mouse near → look/react.</li></ul>
+        </div>
+        <div class="timeline-item">
+          <span class="phase">Slice 6</span>
+          <h3>Menu Bar / Tray Settings</h3>
+          <p><strong>목표:</strong> 메뉴바에서 show/hide, always-on-top, click-through, size, speed, quit을 조작한다.</p>
+        </div>
+        <div class="timeline-item">
+          <span class="phase">Slice 7</span>
+          <h3>Persistence & User Preferences</h3>
+          <p><strong>목표:</strong> 사용자가 고른 크기, 위치, 행동 강도, personality를 저장한다.</p>
+        </div>
+        <div class="timeline-item">
+          <span class="phase">Slice 8</span>
+          <h3>Character Asset Pipeline</h3>
+          <p><strong>목표:</strong> primitive character에서 sprite sheet 또는 GLB asset으로 교체한다. 귀여움/브랜드 감도를 높이는 단계.</p>
+        </div>
+        <div class="timeline-item">
+          <span class="phase">Slice 9</span>
+          <h3>Optional AI Custom Character</h3>
+          <p><strong>목표:</strong> 사용자가 이미지나 prompt로 캐릭터를 만들 수 있게 한다. 이때 Meshy 같은 image-to-3D API 또는 다른 generation pipeline을 검토한다.</p>
+        </div>
+        <div class="timeline-item">
+          <span class="phase">Slice 10</span>
+          <h3>Packaging, QA, Beta</h3>
+          <p><strong>목표:</strong> macOS 앱 패키징, signing/notarization 조사, beta feedback, performance QA, crash handling.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>6. MVP Acceptance Criteria</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Category</th><th>MVP 완료 조건</th><th>테스트 방법</th></tr></thead>
+          <tbody>
+            <tr><td>Overlay</td><td>캐릭터가 투명 창 안에서 실제 Mac 화면 위에 보인다.</td><td>Finder/Chrome/VSCode 위에 표시되는지 확인.</td></tr>
+            <tr><td>Always on top</td><td>일반 앱 창을 움직여도 캐릭터가 앞에 남아 있다.</td><td>여러 앱을 전환하면서 z-order 확인.</td></tr>
+            <tr><td>Non-intrusive</td><td>사용자가 아래 앱을 클릭할 수 있다.</td><td>click-through toggle 상태에서 링크/버튼 클릭 테스트.</td></tr>
+            <tr><td>Behavior</td><td>캐릭터가 최소 5개 행동을 반복한다.</td><td>3분 이상 관찰: idle/walk/blink/sleep/lie.</td></tr>
+            <tr><td>Settings</td><td>메뉴바에서 show/hide/quit 가능.</td><td>tray/menu 명령 직접 테스트.</td></tr>
+            <tr><td>Performance</td><td>CPU/GPU 사용량이 낮고 팬 소음이 심하지 않다.</td><td>Activity Monitor에서 idle/active 상태 비교.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>7. 현재 코드 재사용 전략</h2>
+      <div class="grid three">
+        <div>
+          <h3 class="status-good">Keep</h3>
+          <ul>
+            <li>pnpm workspace</li>
+            <li>Vite + React + TypeScript setup</li>
+            <li>Three/R3F dependency experience</li>
+            <li>CreatureModel concept</li>
+            <li>validation command habit</li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="status-warn">Archive / Prototype</h3>
+          <ul>
+            <li>AI 3D Demo landing page</li>
+            <li>image upload mock flow</li>
+            <li>MacBook-in-viewer scene</li>
+            <li>generation status panel</li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="status-bad">Stop expanding</h3>
+          <ul>
+            <li>backend mock task API</li>
+            <li>Meshy integration now</li>
+            <li>GLB generation pipeline now</li>
+            <li>web-only product direction</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>8. First Codex Slice Recommendation</h2>
+      <p>바로 Electron을 붙이기 전에, 먼저 현재 repo의 방향을 안전하게 정리하는 <strong>Pivot Slice 0</strong>를 추천한다.</p>
+      <pre><code>Recommended model: Codex high / reasoning effort: medium-high
+
+PLAN MODE
+
+We need to pivot the project from an AI 3D MacBook web demo into Screen Friend, a Mac desktop companion app.
+
+Real product goal:
+- a cute character lives on the user's actual Mac screen
+- always visible on top of normal windows
+- appears near the bottom of the screen
+- walks, lies down, blinks, gets sleepy, and loops idle behaviors
+- later custom AI-generated characters may be supported, but that is not the MVP core
+
+Current repo:
+- pnpm workspace
+- apps/web Vite + React + TypeScript
+- React Three Fiber prototype
+- image upload + mock generation flow
+- no desktop shell yet
+
+Task:
+Inspect the current repo and produce a safe pivot plan only. Do not implement.
+
+Please decide:
+1) what to keep
+2) what to mark as old prototype/future customization
+3) whether to add apps/desktop or convert apps/web
+4) first implementation slice after the pivot
+5) validation plan
+
+Constraints:
+- do not delete existing code
+- do not add Electron yet
+- do not add dependencies yet
+- do not add backend/Meshy/API keys
+- keep the plan incremental</code></pre>
+    </section>
+
+    <section class="card">
+      <h2>9. Risk Register</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Risk</th><th>Impact</th><th>Mitigation</th></tr></thead>
+          <tbody>
+            <tr><td>Transparent always-on-top window behaves differently across macOS spaces/fullscreen.</td><td>High</td><td>Mac-first QA early. Test normal desktop, Mission Control, fullscreen apps, multi-monitor.</td></tr>
+            <tr><td>Click-through prevents character interaction.</td><td>Medium</td><td>Implement mode toggle first: full click-through vs interactive debug. Later add hitbox-based switching.</td></tr>
+            <tr><td>3D character is too heavy for always-on companion.</td><td>Medium</td><td>Start with 2D/primitive character. Add GLB only after performance budget is known.</td></tr>
+            <tr><td>App feels annoying instead of cute.</td><td>High</td><td>Default to calm behavior, slow movement, easy hide/pause, no sound by default.</td></tr>
+            <tr><td>Packaging/signing friction on macOS.</td><td>Medium</td><td>Defer packaging until local MVP works. Document manual run first.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>10. Market Reference: malang.lab “MacPet” (ADHD 도마뱀)</h2>
+      <p>
+        <a href="https://www.instagram.com/reel/DZUKpTyz7T7/">Instagram 릴</a> — malang.lab × meshyai_korea 협업 게시물.
+        “맥북에 ADHD 도마뱀 키우기”. 초록 도마뱀 3D 캐릭터가 실제 Mac 화면 위에 살면서
+        <strong>걷고, 벽을 타고, 점프하고, 가끔 춤을 춘다</strong>. 게시 2일 만에 좋아요 6,700+ — Screen Friend와 동일 컨셉의 시장 검증 사례.
+      </p>
+      <div class="grid two">
+        <div>
+          <h3>영상에서 확인된 기술 스택</h3>
+          <ul>
+            <li>Electron이 아닌 <strong>Unity(C#)</strong> 기반. 프로젝트명 <code>MacPet</code>.</li>
+            <li><code>MacOSWindowBridge.cs</code> + <code>MacPetWindow.mm</code>/<code>.bundle</code>: Objective-C 네이티브 플러그인으로 투명/always-on-top 창 제어.</li>
+            <li><code>URPAlphaClearFeature.cs</code>: URP 렌더 패스에서 알파 클리어로 창 투명화.</li>
+            <li><code>DesktopPetController.cs</code>: <code>EnterIdle</code>, <code>_dragTarget</code>, <code>SpawnBound</code> 식별자 — idle 상태 머신, 드래그 인터랙션, 화면 경계 처리.</li>
+            <li>사이드바에 VS CODE PETS 폴더 — 기존 vscode-pets를 레퍼런스로 활용한 정황.</li>
+            <li>Meshy 협업 게시물 — 캐릭터 3D 모델은 Meshy 생성으로 추정.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>로드맵 시사점</h3>
+          <ul>
+            <li>3D 캐릭터 always-on overlay가 실기기에서 동작 가능함을 실증. 단 Unity 런타임과 Electron+Three.js의 성능 특성은 다르므로 “2D 먼저, GLB는 Slice 8” 전략 유지.</li>
+            <li>Electron transparent window가 한계에 부딪힐 경우 <strong>Unity + 네이티브 브리지</strong>가 plan B 경로.</li>
+            <li><strong>벽 타기 · 점프 · 춤</strong>은 귀여움 임팩트가 큰 행동 — Slice 5 Behavior Scheduler의 확장 후보로 추가.</li>
+            <li>“ADHD” 같은 personality 프리셋은 Slice 5/7 참고. 기본값은 차분한 행동(리스크 레지스터 참조).</li>
+            <li>Meshy가 desktop pet 방향으로 직접 마케팅 중 — Slice 9(AI 커스텀 캐릭터) 시 협업/API 검토 가치.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>11. Sources</h2>
+      <ul>
+        <li>Electron BrowserWindow API: <a href="https://www.electronjs.org/docs/latest/api/browser-window">BrowserWindow docs</a></li>
+        <li>Electron Custom Window Styles: <a href="https://electronjs.org/docs/latest/tutorial/custom-window-styles">frameless and transparent windows</a></li>
+        <li>Electron Tray Menu: <a href="https://electronjs.org/docs/latest/tutorial/tray">tray/menu bar control</a></li>
+        <li>Tauri Window Customization: <a href="https://v2.tauri.app/learn/window-customization/">window customization overview</a></li>
+        <li>Tauri Config Reference: <a href="https://v2.tauri.app/reference/config/">alwaysOnTop / transparent / visibleOnAllWorkspaces settings</a></li>
+        <li>malang.lab MacPet reel: <a href="https://www.instagram.com/reel/DZUKpTyz7T7/">맥북에 ADHD 도마뱀 키우기</a></li>
+      </ul>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <p>Prepared for Screen Friend / 화면 친구. Generated as an implementation roadmap and project plan for staged Codex development.</p>
+    </div>
+  </footer>
+</body>
+</html>
