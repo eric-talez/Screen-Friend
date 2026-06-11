@@ -110,8 +110,8 @@ in interactive mode and in the web sandbox.
 1. ~~Character animation sandbox~~ — done (Slice 1): bottom-of-screen character stage with idle/walk/blink/lie-down/sleepy/sleep behaviors on a weighted random scheduler.
 2. ~~Desktop shell~~ — done (Slice 2): Electron shell in `apps/desktop` hosting the web renderer.
 3. ~~Always-on-top and click-through behavior~~ — done (Slices 3–4): transparent always-on-top overlay, click-through by default, interactive debug mode for development.
-4. Behavior scheduler — **next (Slice 5)**: mouse reaction and natural transitions between ambient states with timers and simple rules.
-5. Tray/settings: add visibility, scale, position, behavior toggles, and quit controls.
+4. ~~Behavior scheduler~~ — done (Slice 5): mouse-near "curious" reaction with cooldown on top of the existing weighted random scheduler. Note: in normal click-through mode reactions depend on Electron forwarding mousemove events (`forward: true`), which still needs one manual QA pass on a real Mac.
+5. Tray/settings — **next (Slice 6)**: add visibility, scale, position, behavior toggles, and quit controls.
 6. Optional AI character customization: revisit image upload and generated 3D characters after the companion MVP works.
 
 ## Deferred Work
