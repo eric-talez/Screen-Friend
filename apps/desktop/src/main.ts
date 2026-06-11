@@ -7,9 +7,19 @@
  * controls. Launch with SCREEN_FRIEND_INTERACTIVE=1
  * (pnpm dev:desktop:interactive) to start in interactive mode; the tray
  * checkbox can flip the mode at runtime either way.
+ *
+ * Slice 7 persists preferences (interactive mode, window bounds, plus
+ * scale/personality/behavior intensity for future slices) via ./settings.
  */
 import { app, BrowserWindow, Menu, nativeImage, screen, Tray } from "electron";
 import * as path from "node:path";
+import {
+  DEFAULT_SETTINGS,
+  flushSettings,
+  loadSettings,
+  saveSettings,
+  type ScreenFriendSettings,
+} from "./settings";
 
 const DEV_SERVER_URL = process.env.VITE_DEV_SERVER_URL;
 
@@ -23,9 +33,13 @@ const INTERACTIVE_CHANGED_CHANNEL = "screen-friend:interactive-changed";
 let mainWindow: BrowserWindow | null = null;
 // Keep a module-level reference so the tray is not garbage-collected.
 let tray: Tray | null = null;
-// Runtime source of truth for click-through vs interactive; the env var only
-// seeds the initial value so both launch modes keep working.
-let interactiveMode = process.env.SCREEN_FRIEND_INTERACTIVE === "1";
+// Persisted preferences (Slice 7); loaded once the app is ready.
+let settings: ScreenFriendSettings = { ...DEFAULT_SETTINGS };
+// SCREEN_FRIEND_INTERACTIVE=1 is a dev override that forces interactive on
+// for this launch; otherwise the persisted setting decides.
+const INTERACTIVE_ENV_OVERRIDE = process.env.SCREEN_FRIEND_INTERACTIVE === "1";
+// Runtime source of truth for click-through vs interactive.
+let interactiveMode = INTERACTIVE_ENV_OVERRIDE;
 
 function applyInteractiveMode(window: BrowserWindow): void {
   if (interactiveMode) {
@@ -43,10 +57,43 @@ function sendInteractiveModeToRenderer(): void {
   }
 }
 
+/**
+ * Saved positions are only restored when they still land on a connected
+ * display, so a monitor change cannot strand the companion off-screen.
+ */
+function restorablePosition(): { x: number; y: number } | null {
+  const bounds = settings.windowBounds;
+  if (!bounds) {
+    return null;
+  }
+  const visible = screen.getAllDisplays().some((display) => {
+    const area = display.workArea;
+    return (
+      bounds.x < area.x + area.width &&
+      bounds.x + OVERLAY_WIDTH > area.x &&
+      bounds.y < area.y + area.height &&
+      bounds.y + OVERLAY_HEIGHT > area.y
+    );
+  });
+  return visible ? { x: bounds.x, y: bounds.y } : null;
+}
+
+function rememberWindowBounds(window: BrowserWindow): void {
+  if (window.isDestroyed()) {
+    return;
+  }
+  settings.windowBounds = window.getBounds();
+  saveSettings(settings);
+}
+
 function createMainWindow(): BrowserWindow {
   const { workArea } = screen.getPrimaryDisplay();
-  const x = workArea.x + Math.round((workArea.width - OVERLAY_WIDTH) / 2);
-  const y = workArea.y + workArea.height - OVERLAY_HEIGHT - OVERLAY_BOTTOM_MARGIN;
+  const defaultX = workArea.x + Math.round((workArea.width - OVERLAY_WIDTH) / 2);
+  const defaultY =
+    workArea.y + workArea.height - OVERLAY_HEIGHT - OVERLAY_BOTTOM_MARGIN;
+  const saved = restorablePosition();
+  const x = saved ? saved.x : defaultX;
+  const y = saved ? saved.y : defaultY;
 
   const window = new BrowserWindow({
     width: OVERLAY_WIDTH,
@@ -97,6 +144,11 @@ function createMainWindow(): BrowserWindow {
     sendInteractiveModeToRenderer();
   });
 
+  // The overlay is not user-movable today, but programmatic or future moves
+  // (e.g. tray position controls) should survive a restart.
+  window.on("moved", () => rememberWindowBounds(window));
+  window.on("resized", () => rememberWindowBounds(window));
+
   window.on("closed", () => {
     if (mainWindow === window) {
       mainWindow = null;
@@ -129,6 +181,8 @@ function toggleInteractiveMode(): void {
   sendInteractiveModeToRenderer();
   // Rebuild so the checkbox never goes stale.
   tray?.setContextMenu(buildTrayMenu());
+  settings.interactiveMode = interactiveMode;
+  saveSettings(settings);
 }
 
 function buildTrayMenu(): Menu {
@@ -157,12 +211,25 @@ function createTray(): void {
 }
 
 app.whenReady().then(() => {
+  settings = loadSettings();
+  interactiveMode = INTERACTIVE_ENV_OVERRIDE || settings.interactiveMode;
+
   createMainWindow();
   createTray();
 
   app.on("activate", () => {
     showCompanion();
   });
+});
+
+app.on("before-quit", () => {
+  if (mainWindow && !mainWindow.isDestroyed()) {
+    settings.windowBounds = mainWindow.getBounds();
+  }
+  // settings.interactiveMode is maintained by the tray toggle, so a launch
+  // forced interactive by the dev env override does not overwrite the
+  // user's persisted preference here.
+  flushSettings(settings);
 });
 
 app.on("window-all-closed", () => {

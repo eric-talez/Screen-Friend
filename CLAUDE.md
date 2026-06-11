@@ -32,8 +32,8 @@ This file is written for an **active pnpm workspace** that already contains `app
 | Slice 4 | Click-through + 캐릭터 interaction mode | ✅ 완료 |
 | Slice 5 | Behavior Scheduler v1 (weighted random, edge bounce, mouse react) | ✅ 완료 (normal click-through 모드의 mousemove forwarding은 실기기 수동 QA 1회 필요) |
 | Slice 6 | Menu bar / Tray settings | ✅ 완료 (tray 메뉴 클릭 동작은 실기기 수동 QA 1회 필요) |
-| Slice 7 | Persistence (size, position, personality) | 🎯 Next |
-| Slice 8 | Character asset pipeline (sprite sheet or GLB) | — |
+| Slice 7 | Persistence (size, position, personality) | ✅ 완료 (interactive 모드·창 위치 영속화. scale/personality/intensity는 schema 저장만, 조작 UI는 후속 슬라이스) |
+| Slice 8 | Character asset pipeline (sprite sheet or GLB) | 🎯 Next |
 | Slice 9 | Optional AI custom character | — |
 | Slice 10 | Packaging, QA, beta | — |
 
