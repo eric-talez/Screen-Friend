@@ -35,12 +35,12 @@ const workflowSteps = [
   {
     number: "02",
     title: "Desktop overlay",
-    text: "Later package the character into a transparent always-on-top Mac window.",
+    text: "Transparent always-on-top Electron overlay — live on the real Mac desktop.",
   },
   {
     number: "03",
     title: "Optional customization",
-    text: "AI-generated character support can return after the companion loop works.",
+    text: "AI-generated character support (Slice 9) — planned after asset pipeline and persistence.",
   },
 ];
 
@@ -177,11 +177,11 @@ function App() {
                 : "pending",
     },
     {
-      label: generationState === "success" ? "Experimental viewer showing preview" : "Character sandbox comes next",
+      label: generationState === "success" ? "Experimental viewer showing preview" : "Desktop companion is live",
       detail:
         generationState === "success"
           ? "The current 3D scene remains a prototype, not the desktop companion MVP."
-          : "Next slices should replace this with a bottom-of-screen character stage.",
+          : "The desktop companion is now live. This 3D prototype is a future customization placeholder.",
       state: generationState === "success" ? "complete" : "pending",
     },
   ];
@@ -211,13 +211,14 @@ function App() {
           <p className="eyebrow">Desktop companion direction</p>
           <h1 id="hero-title">Screen Friend / 화면 친구</h1>
           <p className="hero-text">
-            A future Mac desktop companion: a small character that lives near the
-            bottom of the screen, stays above other windows, walks around, blinks,
-            lies down, gets sleepy, and loops soft ambient behaviors.
+            A Mac desktop companion: a small character that lives near the bottom
+            of the screen, stays above other windows, walks around, blinks, lies
+            down, gets sleepy, and loops soft ambient behaviors — without
+            interrupting your work.
           </p>
           <div className="hero-actions" aria-label="Current slice status">
-            <span className="status-pill">Slice 1 · Character sandbox</span>
-            <span className="status-pill muted">Desktop overlay planned</span>
+            <span className="status-pill">Slices 0–8.5 complete</span>
+            <span className="status-pill muted">Desktop overlay live</span>
           </div>
         </div>
         <aside className="hero-preview" aria-label="Demo preview card">
@@ -229,37 +230,38 @@ function App() {
               <span />
             </div>
           </div>
-          <p>Temporary 3D prototype. Future slices should focus on the companion behavior loop.</p>
+          <p>Temporary 3D prototype. The companion is live on desktop; this viewer is future customization placeholder material.</p>
         </aside>
       </section>
 
       <section id="sandbox" className="sandbox-section" aria-labelledby="sandbox-title">
         <div className="section-heading">
-          <p className="section-kicker">Slice 1 · Character behavior sandbox</p>
-          <h2 id="sandbox-title">The companion lives here first.</h2>
+          <p className="section-kicker">Web sandbox · Character behavior prototype</p>
+          <h2 id="sandbox-title">The companion behavior loop.</h2>
           <p className="sandbox-note">
             Idle, walk, blink, lie down, sleepy, and sleep loop on a weighted
-            random scheduler. The same engine will later drive the transparent
-            desktop overlay.
+            random scheduler. The real desktop companion runs the same engine
+            inside a transparent always-on-top Electron overlay.
           </p>
         </div>
         <CharacterStage />
       </section>
 
       <section className="explanation-section" aria-labelledby="explanation-title">
-        <p className="section-kicker">Corrected MVP focus</p>
-        <h2 id="explanation-title">Build the character first, then the desktop overlay.</h2>
+        <p className="section-kicker">MVP status</p>
+        <h2 id="explanation-title">The desktop companion is live — this page is the behavior sandbox.</h2>
         <p>
-          The existing upload and MacBook viewer remain as prototype material,
-          but the core product is a screen companion with animation states and
-          an eventual transparent always-on-top desktop window.
+          The existing upload and MacBook viewer remain as future customization
+          prototype material. The desktop companion (Electron overlay, click-through,
+          tray controls, persistence, animation polish) is already working. Next:
+          Slice 9 optional AI custom character.
         </p>
       </section>
 
       <section id="workflow" className="workflow-section" aria-labelledby="workflow-title">
         <div className="section-heading">
-          <p className="section-kicker">Pivot roadmap preview</p>
-          <h2 id="workflow-title">The next work starts with character behavior.</h2>
+          <p className="section-kicker">Roadmap — Slices 0–8.5 complete</p>
+          <h2 id="workflow-title">What's been built and what comes next.</h2>
         </div>
         <div className="workflow-grid">
           {workflowSteps.map((step) => (
