@@ -5,6 +5,18 @@ import SceneViewer from "./components/SceneViewer";
 // Slice 3: the Electron shell loads the same app with ?mode=overlay to get a
 // minimal transparent character stage instead of the full sandbox page.
 // Slice 4: &interactive=1 marks a debug launch where click-through is off.
+// Slice 6: the desktop preload bridge pushes runtime tray toggles; in the
+// browser sandbox the bridge is absent and the URL param stays in charge.
+declare global {
+  interface Window {
+    screenFriend?: {
+      shell: string;
+      shellVersion: string;
+      onInteractiveChanged?: (callback: (interactive: boolean) => void) => () => void;
+    };
+  }
+}
+
 const overlayParams = new URLSearchParams(window.location.search);
 const isOverlayMode = overlayParams.get("mode") === "overlay";
 const isInteractive = overlayParams.get("interactive") === "1";
@@ -35,9 +47,15 @@ const workflowSteps = [
 type GenerationState = "idle" | "ready" | "generating" | "success" | "error";
 
 function OverlayApp() {
+  const [interactive, setInteractive] = useState(isInteractive);
+
+  useEffect(() => {
+    return window.screenFriend?.onInteractiveChanged?.(setInteractive);
+  }, []);
+
   return (
     <div className="overlay-shell">
-      {isInteractive && <span className="overlay-debug-badge">interactive</span>}
+      {interactive && <span className="overlay-debug-badge">interactive</span>}
       <CharacterStage overlay />
     </div>
   );
