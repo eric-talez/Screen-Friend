@@ -14,6 +14,7 @@ The repo currently includes:
 - A transparent, frameless, always-on-top overlay window near the bottom of the primary display (Slice 3).
 - Click-through by default, with an interactive debug mode via `SCREEN_FRIEND_INTERACTIVE=1` / `pnpm dev:desktop:interactive` and an "interactive" badge in the renderer (Slice 4).
 - A menu bar tray entry with Show/Hide, a runtime Interactive Mode toggle, and Quit (Slice 6).
+- Persistent preferences: the interactive-mode toggle and window position survive restarts via a versioned JSON settings file (Slice 7).
 - A React Three Fiber prototype scene.
 - A temporary image-selection and mock-generation customization flow.
 - A primitive character model inside an experimental MacBook-style 3D viewer.
@@ -110,6 +111,16 @@ character assets arrive in Slice 8) controls the companion at runtime:
 The empty tray image means non-macOS platforms may not render the 🐾 title;
 the app currently targets macOS only.
 
+As of Slice 7 preferences persist across restarts in a versioned JSON file at
+`~/Library/Application Support/@ai-3d-demo/desktop/screen-friend-settings.json`:
+the tray Interactive Mode toggle and the window position are saved and
+restored (positions are only restored while they still land on a connected
+display). `SCREEN_FRIEND_INTERACTIVE=1` remains a launch-only dev override
+and never overwrites the persisted preference. The schema also reserves
+`scale`, `personality`, and `behaviorIntensity` fields with safe defaults;
+controls for those arrive in later slices. A missing or corrupt settings
+file falls back to defaults instead of crashing.
+
 As of Slice 5 the companion notices the mouse: when the cursor comes close,
 calm actions (idle/walk/lie/stretch) are briefly interrupted by a short
 "curious" reaction — the character perks up, turns toward the cursor, and
@@ -126,12 +137,13 @@ in interactive mode and in the web sandbox.
 3. ~~Always-on-top and click-through behavior~~ — done (Slices 3–4): transparent always-on-top overlay, click-through by default, interactive debug mode for development.
 4. ~~Behavior scheduler~~ — done (Slice 5): mouse-near "curious" reaction with cooldown on top of the existing weighted random scheduler. Note: in normal click-through mode reactions depend on Electron forwarding mousemove events (`forward: true`), which still needs one manual QA pass on a real Mac.
 5. ~~Tray/settings~~ — done (Slice 6): menu bar tray with Show/Hide, a runtime Interactive Mode toggle, and Quit. Scale/position controls are deferred to Slice 7 alongside persistence.
-6. Persistence — **next (Slice 7)**: store size, position, and personality across launches.
-7. Optional AI character customization: revisit image upload and generated 3D characters after the companion MVP works.
+6. ~~Persistence~~ — done (Slice 7): versioned JSON settings store in the Electron main process; interactive mode and window position survive restarts, with scale/personality/intensity reserved in the schema.
+7. Character asset pipeline — **next (Slice 8)**: replace the CSS character with sprite-sheet (later GLB) assets per behavior state.
+8. Optional AI character customization: revisit image upload and generated 3D characters after the companion MVP works.
 
 ## Deferred Work
 
-- Tray scale/position controls — Slice 7, alongside persistence of size, position, and personality.
+- Tray scale/position/personality controls — later slice, building on the Slice 7 settings store.
 - Packaging, signing, and distribution — Slice 10.
 - Backend/API integration.
 - Meshy or other AI generation services.
