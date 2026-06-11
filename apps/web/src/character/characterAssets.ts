@@ -45,6 +45,6 @@ export const CHARACTER_ASSET_REGISTRY: Record<CharacterAssetId, CharacterAssetDe
   "default-css": DEFAULT_CSS_ASSET,
 };
 
-export function getCharacterAsset(id: CharacterAssetId): CharacterAssetDefinition {
-  return CHARACTER_ASSET_REGISTRY[id];
+export function getCharacterAsset(id: string): CharacterAssetDefinition {
+  return CHARACTER_ASSET_REGISTRY[id as CharacterAssetId] ?? DEFAULT_CSS_ASSET;
 }

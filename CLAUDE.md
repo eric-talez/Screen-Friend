@@ -34,8 +34,8 @@ This file is written for an **active pnpm workspace** that already contains `app
 | Slice 6 | Menu bar / Tray settings | ✅ 완료 (tray 메뉴 클릭 동작은 실기기 수동 QA 1회 필요) |
 | Slice 7 | Persistence (size, position, personality) | ✅ 완료 (interactive 모드·창 위치 영속화. scale/personality/intensity는 schema 저장만, 조작 UI는 후속 슬라이스) |
 | Slice 8 | Character asset pipeline (sprite sheet or GLB) | ✅ 완료 (asset registry + default-css 등록. 실제 sprite sheet asset은 후속 슬라이스) |
-| Slice 8.5 | Animation polish & surface awareness | 🎯 Next |
-| Slice 9 | Optional AI custom character | — |
+| Slice 8.5 | Animation polish & surface awareness | ✅ 완료 (smoother movement, ground shadow, leg/tail walk anim, lie/sleep flat-pose fix, sleepy sway, near-edge class) |
+| Slice 9 | Optional AI custom character | 🎯 Next |
 | Slice 10 | Packaging, QA, beta | — |
 
 One task = one slice. Do not combine slices.

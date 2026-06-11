@@ -753,8 +753,39 @@ h3 {
   bottom: 36px;
   width: 96px;
   height: 64px;
-  transition: left 0.12s linear;
+  transition: left 0.2s ease-out;
   will-change: left, transform;
+}
+
+/* Slice 8.5: ground contact shadow — anchors the character to the stage floor. */
+.companion::after {
+  content: "";
+  position: absolute;
+  left: 20px;
+  right: 20px;
+  bottom: -4px;
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(21, 48, 42, 0.18);
+  filter: blur(3px);
+  transform: scaleX(0.85);
+  transform-origin: center;
+  transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+  pointer-events: none;
+}
+
+.companion-walk::after {
+  transform: scaleX(0.7);
+}
+
+.companion-lie::after,
+.companion-sleep::after {
+  transform: scaleX(1.1);
+}
+
+.companion-near-edge::after {
+  opacity: 0.28;
+  transform: scaleX(0.95);
 }
 
 .companion-body {
@@ -858,6 +889,20 @@ h3 {
   animation: companion-waddle 0.55s ease-in-out infinite;
 }
 
+/* Slice 8.5: alternating legs synchronized with the waddle. */
+.companion-walk .companion-leg.front {
+  animation: companion-leg-step 0.55s ease-in-out infinite;
+}
+
+.companion-walk .companion-leg.back {
+  animation: companion-leg-step 0.55s ease-in-out infinite reverse;
+}
+
+/* Slice 8.5: tail wag synchronized with the waddle. */
+.companion-walk .companion-tail {
+  animation: companion-tail-wag 0.55s ease-in-out infinite alternate;
+}
+
 @keyframes companion-waddle {
   0%,
   100% {
@@ -865,6 +910,25 @@ h3 {
   }
   50% {
     transform: rotate(2deg) translateY(-3px);
+  }
+}
+
+@keyframes companion-leg-step {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-3px) rotate(-8deg);
+  }
+}
+
+@keyframes companion-tail-wag {
+  from {
+    transform: rotate(-12deg);
+  }
+  to {
+    transform: rotate(-24deg) translateY(-2px);
   }
 }
 
@@ -882,10 +946,20 @@ h3 {
   }
 }
 
+/* Slice 8.5: lie/sleep breathing keeps the flattened scaleY(0.72) pose. */
+@keyframes companion-breathe-lie {
+  0%,
+  100% {
+    transform: scaleY(0.72);
+  }
+  50% {
+    transform: scaleY(0.77);
+  }
+}
+
 .companion-lie .companion-body,
 .companion-sleep .companion-body {
-  transform: scaleY(0.72);
-  animation: companion-breathe 3.4s ease-in-out infinite;
+  animation: companion-breathe-lie 3.4s ease-in-out infinite;
 }
 
 .companion-lie .companion-head,
@@ -893,8 +967,19 @@ h3 {
   top: -8px;
 }
 
+/* Slice 8.5: gentle sway instead of static pose. */
 .companion-sleepy .companion-body {
-  transform: scaleY(0.88) rotate(-1.5deg);
+  animation: companion-sleepy-sway 3.2s ease-in-out infinite;
+}
+
+@keyframes companion-sleepy-sway {
+  0%,
+  100% {
+    transform: scaleY(0.88) rotate(-1.5deg);
+  }
+  50% {
+    transform: scaleY(0.9) rotate(-2.5deg);
+  }
 }
 
 .companion-stretch .companion-body {

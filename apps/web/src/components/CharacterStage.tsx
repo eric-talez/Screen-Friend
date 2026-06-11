@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { DEFAULT_CSS_ASSET } from "../character/characterAssets";
+import { getCharacterAsset } from "../character/characterAssets";
 import { createBehaviorEngine, type CharacterState } from "../character/behaviorEngine";
 
 const FRAME_INTERVAL_MS = 1_000 / 30; // 30fps budget per roadmap performance target.
@@ -11,7 +11,7 @@ const REACT_RADIUS_PX = 90;
 const POINTER_FRESH_MS = 400;
 
 // Slice 8: use the asset registry for class names and labels.
-const asset = DEFAULT_CSS_ASSET;
+const asset = getCharacterAsset("default-css");
 
 interface CharacterStageProps {
   /** Slice 3: render as a transparent desktop overlay (no card chrome/status). */
@@ -88,6 +88,7 @@ function CharacterStage({ overlay = false }: CharacterStageProps) {
   const action = state?.action ?? "idle";
   const x = state?.x ?? 0.5;
   const direction = state?.direction ?? 1;
+  const nearEdge = x <= 0.08 || x >= 0.92;
   const blinking = state?.blinking ?? false;
   const eyesClosed = blinking || action === "sleep" || action === "sleepy";
 
@@ -105,7 +106,7 @@ function CharacterStage({ overlay = false }: CharacterStageProps) {
       )}
       <div className="stage-ground" aria-hidden="true" />
       <div
-        className={`companion ${asset.actionAssets[action].className}`}
+        className={`companion ${asset.actionAssets[action].className}${nearEdge ? " companion-near-edge" : ""}`}
         style={{
           left: `${(x * 100).toFixed(2)}%`,
           transform: `translateX(-50%) scaleX(${direction})`,

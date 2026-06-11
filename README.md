@@ -140,8 +140,8 @@ in interactive mode and in the web sandbox.
 5. ~~Tray/settings~~ — done (Slice 6): menu bar tray with Show/Hide, a runtime Interactive Mode toggle, and Quit. Scale/position controls are deferred to Slice 7 alongside persistence.
 6. ~~Persistence~~ — done (Slice 7): versioned JSON settings store in the Electron main process; interactive mode and window position survive restarts, with scale/personality/intensity reserved in the schema.
 7. ~~Character asset pipeline~~ — done (Slice 8): asset registry wired up; default CSS creature is `"default-css"`, future sprites plug in as new `CharacterAssetId` entries.
-8. Animation polish — **next (Slice 8.5)**: smoother walk/turn easing and surface-awareness behaviors (ground anchoring, edge resting).
-8. Optional AI character customization: revisit image upload and generated 3D characters after the companion MVP works.
+8. ~~Animation polish~~ — done (Slice 8.5): smoother movement easing (`ease-out`), ground contact shadow to anchor the character to the screen bottom, leg/tail animation during walk, lie/sleep flat-pose fix, sleepy sway, and a simple stage-bound near-edge class. No macOS Accessibility permissions, no real window detection, no new assets.
+9. Optional AI character customization: revisit image upload and generated 3D characters after the companion MVP works.
 
 ## Deferred Work
 
