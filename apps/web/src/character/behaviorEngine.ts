@@ -6,7 +6,7 @@
  * character-engine package and be reused by the desktop shell.
  */
 
-export type CharacterAction = "idle" | "walk" | "lie" | "sleepy" | "sleep" | "stretch";
+export type CharacterAction = "idle" | "walk" | "lie" | "sleepy" | "sleep" | "stretch" | "react";
 
 export type Direction = -1 | 1;
 
@@ -46,6 +46,13 @@ const BLINK_MIN_GAP_MS = 2_200;
 const BLINK_MAX_GAP_MS = 6_500;
 const BLINK_DURATION_MS = 140;
 
+/** Minimum quiet time between mouse reactions so a hovering cursor cannot spam them. */
+const REACT_COOLDOWN_MS = 10_000;
+const REACT_MIN_DURATION_MS = 1_400;
+const REACT_MAX_DURATION_MS = 2_000;
+/** Only calm, awake actions can be interrupted by the mouse; naps stay undisturbed. */
+const REACT_INTERRUPTIBLE: ReadonlySet<CharacterAction> = new Set(["idle", "walk", "lie", "stretch"]);
+
 /** Sleepiness gained per second for low-energy actions. */
 const SLEEPINESS_GAIN_PER_SEC = 0.016;
 /** Sleepiness recovered per second while sleeping. */
@@ -72,6 +79,13 @@ export interface BehaviorEngine {
   getState(): Readonly<CharacterState>;
   /** Advance the simulation by dtMs milliseconds. */
   tick(dtMs: number): Readonly<CharacterState>;
+  /**
+   * Report that the mouse cursor is near the character. pointerX is the
+   * cursor position normalized to stage width (0..1). The engine decides
+   * whether to react: only calm awake actions are interrupted, and a
+   * cooldown keeps a lingering cursor from retriggering the reaction.
+   */
+  notifyMouseNear(pointerX: number): void;
 }
 
 export function createBehaviorEngine(options: BehaviorEngineOptions = {}): BehaviorEngine {
@@ -89,6 +103,7 @@ export function createBehaviorEngine(options: BehaviorEngineOptions = {}): Behav
 
   let blinkCooldownMs = randomBetween(random, BLINK_MIN_GAP_MS, BLINK_MAX_GAP_MS);
   let blinkRemainingMs = 0;
+  let reactCooldownMs = 0;
 
   function planNextAction(): ActionPlan {
     // Forced sleep chain takes priority over the random scheduler.
@@ -137,8 +152,21 @@ export function createBehaviorEngine(options: BehaviorEngineOptions = {}): Behav
     }
   }
 
+  function notifyMouseNear(pointerX: number): void {
+    if (reactCooldownMs > 0) return;
+    if (!REACT_INTERRUPTIBLE.has(state.action)) return;
+    const durationMs = randomBetween(random, REACT_MIN_DURATION_MS, REACT_MAX_DURATION_MS);
+    state.action = "react";
+    state.remainingMs = durationMs;
+    state.direction = pointerX >= state.x ? 1 : -1;
+    // Cooldown spans the reaction itself plus the quiet period after it.
+    reactCooldownMs = durationMs + REACT_COOLDOWN_MS;
+  }
+
   function tick(dtMs: number): Readonly<CharacterState> {
     const dtSec = dtMs / 1_000;
+
+    reactCooldownMs = Math.max(0, reactCooldownMs - dtMs);
 
     // Blink micro-event runs independently of the action FSM (closed while asleep anyway).
     if (blinkRemainingMs > 0) {
@@ -183,5 +211,6 @@ export function createBehaviorEngine(options: BehaviorEngineOptions = {}): Behav
   return {
     getState: () => state,
     tick,
+    notifyMouseNear,
   };
 }
