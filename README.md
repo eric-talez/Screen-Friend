@@ -15,6 +15,7 @@ The repo currently includes:
 - Click-through by default, with an interactive debug mode via `SCREEN_FRIEND_INTERACTIVE=1` / `pnpm dev:desktop:interactive` and an "interactive" badge in the renderer (Slice 4).
 - A menu bar tray entry with Show/Hide, a runtime Interactive Mode toggle, and Quit (Slice 6).
 - Persistent preferences: the interactive-mode toggle and window position survive restarts via a versioned JSON settings file (Slice 7).
+- Character asset registry: action → CSS class and label mappings extracted into a versioned registry (`characterAssets.ts`), so future sprite-sheet or GLB characters can plug in without touching the behavior engine (Slice 8).
 - A React Three Fiber prototype scene.
 - A temporary image-selection and mock-generation customization flow.
 - A primitive character model inside an experimental MacBook-style 3D viewer.
@@ -138,7 +139,8 @@ in interactive mode and in the web sandbox.
 4. ~~Behavior scheduler~~ — done (Slice 5): mouse-near "curious" reaction with cooldown on top of the existing weighted random scheduler. Note: in normal click-through mode reactions depend on Electron forwarding mousemove events (`forward: true`), which still needs one manual QA pass on a real Mac.
 5. ~~Tray/settings~~ — done (Slice 6): menu bar tray with Show/Hide, a runtime Interactive Mode toggle, and Quit. Scale/position controls are deferred to Slice 7 alongside persistence.
 6. ~~Persistence~~ — done (Slice 7): versioned JSON settings store in the Electron main process; interactive mode and window position survive restarts, with scale/personality/intensity reserved in the schema.
-7. Character asset pipeline — **next (Slice 8)**: replace the CSS character with sprite-sheet (later GLB) assets per behavior state.
+7. ~~Character asset pipeline~~ — done (Slice 8): asset registry wired up; default CSS creature is `"default-css"`, future sprites plug in as new `CharacterAssetId` entries.
+8. Animation polish — **next (Slice 8.5)**: smoother walk/turn easing and surface-awareness behaviors (ground anchoring, edge resting).
 8. Optional AI character customization: revisit image upload and generated 3D characters after the companion MVP works.
 
 ## Deferred Work
