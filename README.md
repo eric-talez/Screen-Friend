@@ -1,8 +1,8 @@
 # Screen Friend / 화면 친구
 
-Screen Friend is a desktop companion app direction: a cute character that lives on the user's Mac screen, stays visible above other windows, and loops ambient behaviors like walking, blinking, lying down, and getting sleepy.
+Screen Friend is a Mac desktop companion app: a cute character that lives near the bottom of the screen, stays above other windows, and loops ambient behaviors like walking, blinking, lying down, and getting sleepy — without interrupting your work.
 
-The codebase is no longer just a web prototype: the character now runs inside an Electron transparent always-on-top overlay with click-through, on top of the real Mac desktop. The next product work is behavior polish — mouse reaction and a richer behavior scheduler.
+The Electron transparent always-on-top overlay is live. Slices 0–8.5 are merged: click-through, tray controls, persistence, character asset registry, and animation polish (easing, ground shadow, near-edge awareness) are all working. Next up is Slice 9 (optional AI custom character) — split it into smaller sub-slices before starting.
 
 ## Current State
 
@@ -22,18 +22,19 @@ The repo currently includes:
 
 The current upload/generation flow is not the MVP core. Treat it as a future customization prototype that may later help users create custom characters.
 
-## MVP Direction
+## MVP Status
 
-The real MVP should focus on:
+The core companion MVP is working:
 
-- A character animation sandbox.
-- A character positioned near the bottom of the screen.
-- Idle loops such as standing, walking, blinking, lying down, and sleepy states.
-- Future packaging as a transparent always-on-top desktop overlay.
-- Later support for tray/settings controls.
-- Optional AI-generated custom characters after the desktop companion loop works.
+- Character animation sandbox (web) with idle/walk/blink/lie-down/sleepy/sleep.
+- Transparent always-on-top Electron overlay on the real Mac desktop.
+- Click-through by default; interactive debug mode via env var or tray toggle.
+- Tray/menu-bar controls: Show, Hide, Interactive Mode toggle, Quit.
+- Persistent preferences (interactive mode, window position) across restarts.
+- Character asset registry wired up; default CSS creature is `"default-css"`.
+- Animation polish: smooth easing, ground contact shadow, near-edge awareness.
 
-This project should not add backend services, Meshy integration, API keys, or AI generation as core MVP work yet.
+What remains: optional AI custom character (Slice 9 — split before starting), packaging/signing/distribution (Slice 10). Do not add backend services, Meshy integration, API keys, or AI generation without first planning Slice 9 sub-slices.
 
 ## Commands
 
@@ -142,6 +143,10 @@ in interactive mode and in the web sandbox.
 7. ~~Character asset pipeline~~ — done (Slice 8): asset registry wired up; default CSS creature is `"default-css"`, future sprites plug in as new `CharacterAssetId` entries.
 8. ~~Animation polish~~ — done (Slice 8.5): smoother movement easing (`ease-out`), ground contact shadow to anchor the character to the screen bottom, leg/tail animation during walk, lie/sleep flat-pose fix, sleepy sway, and a simple stage-bound near-edge class. No macOS Accessibility permissions, no real window detection, no new assets.
 9. Optional AI character customization: revisit image upload and generated 3D characters after the companion MVP works.
+
+## QA Checklist
+
+See [docs/qa-checklist.md](docs/qa-checklist.md) for the full checklist covering automated typecheck/build, web sandbox smoke, desktop overlay (normal + interactive), tray manual QA, persistence restart QA, and animation polish verification.
 
 ## Deferred Work
 
