@@ -2,14 +2,17 @@
 
 Screen Friend is a desktop companion app direction: a cute character that lives on the user's Mac screen, stays visible above other windows, and loops ambient behaviors like walking, blinking, lying down, and getting sleepy.
 
-The current codebase is still a web-based prototype. The next product work should shift from "image upload to 3D generation" toward a character animation sandbox that can later become a transparent always-on-top desktop overlay.
+The codebase is no longer just a web prototype: the character now runs inside an Electron transparent always-on-top overlay with click-through, on top of the real Mac desktop. The next product work is behavior polish — mouse reaction and a richer behavior scheduler.
 
 ## Current State
 
 The repo currently includes:
 
 - A pnpm workspace.
-- A Vite + React + TypeScript app in `apps/web`.
+- A Vite + React + TypeScript app in `apps/web` with the character behavior sandbox (idle/walk/blink/lie-down/sleepy/sleep loop).
+- An Electron desktop shell in `apps/desktop` (main + preload).
+- A transparent, frameless, always-on-top overlay window near the bottom of the primary display (Slice 3).
+- Click-through by default, with an interactive debug mode via `SCREEN_FRIEND_INTERACTIVE=1` / `pnpm dev:desktop:interactive` and an "interactive" badge in the renderer (Slice 4).
 - A React Three Fiber prototype scene.
 - A temporary image-selection and mock-generation customization flow.
 - A primitive character model inside an experimental MacBook-style 3D viewer.
@@ -96,17 +99,17 @@ always recovers a clickable window.
 ## Updated Roadmap
 
 1. ~~Character animation sandbox~~ — done (Slice 1): bottom-of-screen character stage with idle/walk/blink/lie-down/sleepy/sleep behaviors on a weighted random scheduler.
-2. ~~Desktop shell~~ — done (Slice 2): Electron shell in `apps/desktop` hosting the web renderer. Transparent overlay is the next slice.
-3. Always-on-top and click-through behavior: make the companion visible without blocking normal desktop use.
-4. Behavior scheduler: transition between ambient states naturally with timers and simple rules.
+2. ~~Desktop shell~~ — done (Slice 2): Electron shell in `apps/desktop` hosting the web renderer.
+3. ~~Always-on-top and click-through behavior~~ — done (Slices 3–4): transparent always-on-top overlay, click-through by default, interactive debug mode for development.
+4. Behavior scheduler — **next (Slice 5)**: mouse reaction and natural transitions between ambient states with timers and simple rules.
 5. Tray/settings: add visibility, scale, position, behavior toggles, and quit controls.
 6. Optional AI character customization: revisit image upload and generated 3D characters after the companion MVP works.
 
 ## Deferred Work
 
-- Electron/Tauri desktop shell.
-- Transparent overlay implementation.
-- Always-on-top and click-through behavior.
+- Tray/settings controls (show/hide/quit, scale, position) — Slice 6.
+- Persistence of size, position, and personality — Slice 7.
+- Packaging, signing, and distribution — Slice 10.
 - Backend/API integration.
 - Meshy or other AI generation services.
 - GLB loading and generated model replacement.

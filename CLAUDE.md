@@ -28,9 +28,9 @@ This file is written for an **active pnpm workspace** that already contains `app
 | Pivot 0 | README·docs 방향 재정의 | ✅ 완료 |
 | Slice 1 | Web sandbox: idle/walk/blink/sleep/lie 행동 loop | ✅ 완료 |
 | Slice 2 | Electron desktop shell (main + preload + renderer) | ✅ 완료 |
-| Slice 3 | Transparent always-on-top overlay | 🎯 Next |
-| Slice 4 | Click-through + 캐릭터 interaction mode | — |
-| Slice 5 | Behavior Scheduler v1 (weighted random, edge bounce, mouse react) | — |
+| Slice 3 | Transparent always-on-top overlay | ✅ 완료 |
+| Slice 4 | Click-through + 캐릭터 interaction mode | ✅ 완료 |
+| Slice 5 | Behavior Scheduler v1 (weighted random, edge bounce, mouse react) | 🎯 Next |
 | Slice 6 | Menu bar / Tray settings | — |
 | Slice 7 | Persistence (size, position, personality) | — |
 | Slice 8 | Character asset pipeline (sprite sheet or GLB) | — |
@@ -280,8 +280,9 @@ pnpm run typecheck
 | Always on top | 앱 창을 이동해도 캐릭터가 앞에 남아 있다. |
 | Non-intrusive | click-through 상태에서 아래 앱 링크/버튼 클릭 가능. |
 | Behavior | 최소 5개 행동이 자연스럽게 반복된다 (idle/walk/blink/sleep/lie). |
-| Settings | 메뉴바에서 show/hide/quit 가능. |
 | Performance | Activity Monitor에서 CPU/GPU 사용량이 낮다. 팬 소음 없음. |
+
+Tray/settings (메뉴바에서 show/hide/quit)는 Slice 6 범위이며, Slice 6 완료 시 별도 acceptance로 확인한다.
 
 ---
 
