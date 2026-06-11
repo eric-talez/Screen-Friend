@@ -84,7 +84,7 @@ pnpm run dev:desktop:interactive
 - [ ] Quit via tray → Quit Screen Friend.
 - [ ] Relaunch (`pnpm run dev:desktop`).
 - [ ] Interactive Mode toggle matches the saved state.
-- [ ] To verify position persistence: inspect `~/Library/Application Support/@ai-3d-demo/desktop/screen-friend-settings.json` directly — confirm `windowX`/`windowY` are saved. User-facing position controls are deferred to a later slice; direct window dragging is not yet exposed.
+- [ ] To verify position persistence: inspect `~/Library/Application Support/@ai-3d-demo/desktop/screen-friend-settings.json` directly — confirm `windowBounds.{x,y,width,height}` is saved. User-facing position controls are deferred to a later slice; direct window dragging is not yet exposed.
 
 > **Note:** The window will open at the saved position on next launch if the display is still connected. There is no user-facing drag-to-move control yet.
 
