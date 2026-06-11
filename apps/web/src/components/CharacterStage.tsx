@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { DEFAULT_CSS_ASSET } from "../character/characterAssets";
 import { createBehaviorEngine, type CharacterState } from "../character/behaviorEngine";
 
 const FRAME_INTERVAL_MS = 1_000 / 30; // 30fps budget per roadmap performance target.
@@ -9,15 +10,8 @@ const REACT_RADIUS_PX = 90;
 // not keep retriggering reactions every time the cooldown expires.
 const POINTER_FRESH_MS = 400;
 
-const ACTION_LABELS: Record<CharacterState["action"], string> = {
-  idle: "Idle",
-  walk: "Walking",
-  lie: "Lying down",
-  sleepy: "Getting sleepy",
-  sleep: "Sleeping",
-  stretch: "Stretching",
-  react: "Curious",
-};
+// Slice 8: use the asset registry for class names and labels.
+const asset = DEFAULT_CSS_ASSET;
 
 interface CharacterStageProps {
   /** Slice 3: render as a transparent desktop overlay (no card chrome/status). */
@@ -105,13 +99,13 @@ function CharacterStage({ overlay = false }: CharacterStageProps) {
     >
       {!overlay && (
         <div className="stage-status" aria-live="polite">
-          <span className={`stage-action-pill action-${action}`}>{ACTION_LABELS[action]}</span>
+          <span className={`stage-action-pill action-${action}`}>{asset.actionAssets[action].label}</span>
           <span className="stage-hint">Web sandbox · the future desktop overlay will replace this stage</span>
         </div>
       )}
       <div className="stage-ground" aria-hidden="true" />
       <div
-        className={`companion companion-${action}`}
+        className={`companion ${asset.actionAssets[action].className}`}
         style={{
           left: `${(x * 100).toFixed(2)}%`,
           transform: `translateX(-50%) scaleX(${direction})`,
