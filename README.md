@@ -76,7 +76,22 @@ As of Slice 3 the desktop shell opens as a transparent, frameless,
 always-on-top overlay strip near the bottom of the primary display. It loads
 the renderer with `?mode=overlay`, which shows only the character stage
 (open the same URL without the query param in a browser to get the full
-sandbox page). Click-through is not implemented yet — that is Slice 4.
+sandbox page).
+
+As of Slice 4 the overlay is click-through by default: mouse clicks pass
+through the window to the apps underneath. To debug the overlay with the
+mouse enabled, launch it in interactive mode instead (an "interactive" badge
+is shown in the top-left corner):
+
+```sh
+# Terminal 2 alternative: overlay stays clickable for development
+pnpm dev:desktop:interactive
+```
+
+To quit safely in either mode: press `Ctrl+C` in the terminal that launched
+Electron, or right-click the Screen Friend Dock icon and choose Quit. The
+click-through state is decided at launch, so relaunching in interactive mode
+always recovers a clickable window.
 
 ## Updated Roadmap
 

@@ -1,14 +1,17 @@
 /**
- * Slice 3: transparent always-on-top overlay shell.
+ * Slice 4: click-through overlay shell.
  *
- * The desktop window is now a frameless, transparent companion strip
- * pinned near the bottom of the primary display. Click-through
- * (setIgnoreMouseEvents) is deferred to Slice 4; tray controls to Slice 6.
+ * The frameless, transparent companion strip (Slice 3) now ignores mouse
+ * events by default so clicks pass through to the apps underneath. Launch
+ * with SCREEN_FRIEND_INTERACTIVE=1 (pnpm dev:desktop:interactive) to keep
+ * the window clickable for development/debugging. Tray controls arrive in
+ * Slice 6.
  */
 import { app, BrowserWindow, screen } from "electron";
 import * as path from "node:path";
 
 const DEV_SERVER_URL = process.env.VITE_DEV_SERVER_URL;
+const INTERACTIVE = process.env.SCREEN_FRIEND_INTERACTIVE === "1";
 
 const OVERLAY_WIDTH = 520;
 const OVERLAY_HEIGHT = 260;
@@ -44,12 +47,23 @@ function createMainWindow(): BrowserWindow {
   window.setAlwaysOnTop(true, "screen-saver");
   window.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
 
+  if (!INTERACTIVE) {
+    // Whole-window click-through. forward:true keeps mousemove events
+    // flowing to the renderer for future mouse-react behavior (Slice 5).
+    window.setIgnoreMouseEvents(true, { forward: true });
+  }
+
+  const query: Record<string, string> = { mode: "overlay" };
+  if (INTERACTIVE) {
+    query.interactive = "1";
+  }
+
   if (DEV_SERVER_URL) {
-    void window.loadURL(`${DEV_SERVER_URL}?mode=overlay`);
+    void window.loadURL(`${DEV_SERVER_URL}?${new URLSearchParams(query).toString()}`);
   } else {
     // Built renderer output from apps/web. Run `pnpm --filter @ai-3d-demo/web build` first.
     void window.loadFile(path.join(__dirname, "..", "..", "web", "dist", "index.html"), {
-      query: { mode: "overlay" },
+      query,
     });
   }
 

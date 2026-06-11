@@ -4,8 +4,10 @@ import SceneViewer from "./components/SceneViewer";
 
 // Slice 3: the Electron shell loads the same app with ?mode=overlay to get a
 // minimal transparent character stage instead of the full sandbox page.
-const isOverlayMode =
-  new URLSearchParams(window.location.search).get("mode") === "overlay";
+// Slice 4: &interactive=1 marks a debug launch where click-through is off.
+const overlayParams = new URLSearchParams(window.location.search);
+const isOverlayMode = overlayParams.get("mode") === "overlay";
+const isInteractive = overlayParams.get("interactive") === "1";
 
 if (isOverlayMode) {
   document.documentElement.classList.add("overlay-mode");
@@ -35,6 +37,7 @@ type GenerationState = "idle" | "ready" | "generating" | "success" | "error";
 function OverlayApp() {
   return (
     <div className="overlay-shell">
+      {isInteractive && <span className="overlay-debug-badge">interactive</span>}
       <CharacterStage overlay />
     </div>
   );

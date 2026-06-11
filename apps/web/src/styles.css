@@ -931,6 +931,7 @@ body.overlay-mode {
 }
 
 .overlay-shell {
+  position: relative;
   height: 100vh;
   display: flex;
   align-items: flex-end;
@@ -949,4 +950,19 @@ body.overlay-mode {
 
 .character-stage--overlay .stage-ground {
   background: linear-gradient(90deg, transparent, rgba(36, 116, 109, 0.22), transparent);
+}
+
+.overlay-debug-badge {
+  position: absolute;
+  top: 10px;
+  left: 12px;
+  z-index: 3;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: rgba(212, 91, 69, 0.85);
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
