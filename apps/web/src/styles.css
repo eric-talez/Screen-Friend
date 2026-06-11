@@ -766,12 +766,14 @@ h3 {
   bottom: -4px;
   height: 8px;
   border-radius: 999px;
-  background: rgba(21, 48, 42, 0.18);
+  background: rgb(21, 48, 42);
+  opacity: 0.18;
   filter: blur(3px);
   transform: scaleX(0.85);
   transform-origin: center;
   transition: opacity 0.2s ease-out, transform 0.2s ease-out;
   pointer-events: none;
+  z-index: 0;
 }
 
 .companion-walk::after {
@@ -798,6 +800,7 @@ h3 {
   background: linear-gradient(135deg, #79d99b, #4cb87f);
   box-shadow: 0 8px 18px rgba(36, 116, 109, 0.25);
   transform-origin: 50% 100%;
+  z-index: 1;
 }
 
 .companion-head {
@@ -869,6 +872,7 @@ h3 {
   font-weight: 800;
   color: var(--blue);
   animation: companion-zzz-float 2.2s ease-in-out infinite;
+  z-index: 1;
 }
 
 @keyframes companion-zzz-float {
@@ -1021,6 +1025,7 @@ h3 {
   font-weight: 800;
   color: var(--accent-strong);
   animation: companion-react-pop 0.45s ease-out;
+  z-index: 1;
 }
 
 @keyframes companion-react-pop {
