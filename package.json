@@ -7,7 +7,8 @@
     "typecheck": "pnpm --filter @ai-3d-demo/web typecheck && pnpm --filter @ai-3d-demo/desktop typecheck",
     "build": "pnpm --filter @ai-3d-demo/web build",
     "dev:web": "pnpm --filter @ai-3d-demo/web dev",
-    "dev:desktop": "pnpm --filter @ai-3d-demo/desktop dev"
+    "dev:desktop": "pnpm --filter @ai-3d-demo/desktop dev",
+    "dev:desktop:interactive": "pnpm --filter @ai-3d-demo/desktop dev:interactive"
   },
   "packageManager": "pnpm@9.15.4"
 }
