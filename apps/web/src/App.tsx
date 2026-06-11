@@ -177,7 +177,7 @@ function App() {
                 : "pending",
     },
     {
-      label: generationState === "success" ? "Experimental viewer showing preview" : "Character sandbox comes next",
+      label: generationState === "success" ? "Experimental viewer showing preview" : "Desktop companion is live",
       detail:
         generationState === "success"
           ? "The current 3D scene remains a prototype, not the desktop companion MVP."
@@ -230,7 +230,7 @@ function App() {
               <span />
             </div>
           </div>
-          <p>Temporary 3D prototype. Future slices should focus on the companion behavior loop.</p>
+          <p>Temporary 3D prototype. The companion is live on desktop; this viewer is future customization placeholder material.</p>
         </aside>
       </section>
 

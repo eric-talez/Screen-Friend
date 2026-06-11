@@ -81,11 +81,12 @@ pnpm run dev:desktop:interactive
 ## Persistence restart QA
 
 - [ ] Launch the desktop app; enable Interactive Mode via tray.
-- [ ] Move the overlay window to a non-default position.
 - [ ] Quit via tray → Quit Screen Friend.
 - [ ] Relaunch (`pnpm run dev:desktop`).
 - [ ] Interactive Mode toggle matches the saved state.
-- [ ] Window position is restored (if the display is still connected).
+- [ ] To verify position persistence: inspect `~/Library/Application Support/@ai-3d-demo/desktop/screen-friend-settings.json` directly — confirm `windowX`/`windowY` are saved. User-facing position controls are deferred to a later slice; direct window dragging is not yet exposed.
+
+> **Note:** The window will open at the saved position on next launch if the display is still connected. There is no user-facing drag-to-move control yet.
 
 ---
 
