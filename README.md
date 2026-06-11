@@ -13,6 +13,7 @@ The repo currently includes:
 - An Electron desktop shell in `apps/desktop` (main + preload).
 - A transparent, frameless, always-on-top overlay window near the bottom of the primary display (Slice 3).
 - Click-through by default, with an interactive debug mode via `SCREEN_FRIEND_INTERACTIVE=1` / `pnpm dev:desktop:interactive` and an "interactive" badge in the renderer (Slice 4).
+- A menu bar tray entry with Show/Hide, a runtime Interactive Mode toggle, and Quit (Slice 6).
 - A React Three Fiber prototype scene.
 - A temporary image-selection and mock-generation customization flow.
 - A primitive character model inside an experimental MacBook-style 3D viewer.
@@ -91,10 +92,23 @@ is shown in the top-left corner):
 pnpm dev:desktop:interactive
 ```
 
-To quit safely in either mode: press `Ctrl+C` in the terminal that launched
-Electron, or right-click the Screen Friend Dock icon and choose Quit. The
-click-through state is decided at launch, so relaunching in interactive mode
-always recovers a clickable window.
+To quit safely in either mode: use the tray menu (see below), press `Ctrl+C`
+in the terminal that launched Electron, or right-click the Screen Friend Dock
+icon and choose Quit.
+
+As of Slice 6 a menu bar tray entry (a 🐾 text placeholder until real
+character assets arrive in Slice 8) controls the companion at runtime:
+
+- **Show Screen Friend** — restores the hidden overlay (recreates the window
+  if it was destroyed).
+- **Hide Screen Friend** — hides the overlay without losing app state.
+- **Interactive Mode** — checkbox that toggles click-through on the fly; the
+  launch env var only seeds the initial state, and the renderer badge follows
+  the toggle.
+- **Quit Screen Friend** — cleanly exits the app.
+
+The empty tray image means non-macOS platforms may not render the 🐾 title;
+the app currently targets macOS only.
 
 As of Slice 5 the companion notices the mouse: when the cursor comes close,
 calm actions (idle/walk/lie/stretch) are briefly interrupted by a short
@@ -111,13 +125,13 @@ in interactive mode and in the web sandbox.
 2. ~~Desktop shell~~ — done (Slice 2): Electron shell in `apps/desktop` hosting the web renderer.
 3. ~~Always-on-top and click-through behavior~~ — done (Slices 3–4): transparent always-on-top overlay, click-through by default, interactive debug mode for development.
 4. ~~Behavior scheduler~~ — done (Slice 5): mouse-near "curious" reaction with cooldown on top of the existing weighted random scheduler. Note: in normal click-through mode reactions depend on Electron forwarding mousemove events (`forward: true`), which still needs one manual QA pass on a real Mac.
-5. Tray/settings — **next (Slice 6)**: add visibility, scale, position, behavior toggles, and quit controls.
-6. Optional AI character customization: revisit image upload and generated 3D characters after the companion MVP works.
+5. ~~Tray/settings~~ — done (Slice 6): menu bar tray with Show/Hide, a runtime Interactive Mode toggle, and Quit. Scale/position controls are deferred to Slice 7 alongside persistence.
+6. Persistence — **next (Slice 7)**: store size, position, and personality across launches.
+7. Optional AI character customization: revisit image upload and generated 3D characters after the companion MVP works.
 
 ## Deferred Work
 
-- Tray/settings controls (show/hide/quit, scale, position) — Slice 6.
-- Persistence of size, position, and personality — Slice 7.
+- Tray scale/position controls — Slice 7, alongside persistence of size, position, and personality.
 - Packaging, signing, and distribution — Slice 10.
 - Backend/API integration.
 - Meshy or other AI generation services.
