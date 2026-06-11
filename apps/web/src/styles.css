@@ -912,6 +912,47 @@ h3 {
   }
 }
 
+/* Slice 5: mouse-near reaction — a single calm perk-up, then hold still. */
+
+.companion-react .companion-body {
+  animation: companion-perk 0.5s ease-out;
+}
+
+@keyframes companion-perk {
+  0%,
+  100% {
+    transform: scaleY(1);
+  }
+  40% {
+    transform: scaleY(1.12);
+  }
+}
+
+.companion-react-mark {
+  position: absolute;
+  right: -22px;
+  top: -36px;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--accent-strong);
+  animation: companion-react-pop 0.45s ease-out;
+}
+
+@keyframes companion-react-pop {
+  0% {
+    transform: translateY(6px) scale(0.4);
+    opacity: 0;
+  }
+  60% {
+    transform: translateY(-2px) scale(1.15);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
 @media (max-width: 720px) {
   .character-stage {
     height: 200px;

@@ -96,6 +96,15 @@ Electron, or right-click the Screen Friend Dock icon and choose Quit. The
 click-through state is decided at launch, so relaunching in interactive mode
 always recovers a clickable window.
 
+As of Slice 5 the companion notices the mouse: when the cursor comes close,
+calm actions (idle/walk/lie/stretch) are briefly interrupted by a short
+"curious" reaction — the character perks up, turns toward the cursor, and
+shows a small "!" marker. A cooldown keeps a lingering cursor from
+retriggering the reaction, and naps are never interrupted. Reactions rely on
+mousemove events reaching the renderer, so in normal click-through mode they
+depend on Electron forwarding mouse moves (`forward: true`); they always work
+in interactive mode and in the web sandbox.
+
 ## Updated Roadmap
 
 1. ~~Character animation sandbox~~ — done (Slice 1): bottom-of-screen character stage with idle/walk/blink/lie-down/sleepy/sleep behaviors on a weighted random scheduler.
