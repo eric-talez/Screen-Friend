@@ -1,6 +1,7 @@
 import { type ChangeEvent, useEffect, useRef, useState } from "react";
 import CharacterStage from "./components/CharacterStage";
 import SceneViewer from "./components/SceneViewer";
+import { listCharacterAssets } from "./character/characterAssets";
 
 // Slice 3: the Electron shell loads the same app with ?mode=overlay to get a
 // minimal transparent character stage instead of the full sandbox page.
@@ -65,6 +66,17 @@ function OverlayApp() {
 }
 
 function App() {
+  const assets = listCharacterAssets();
+  const initialAssetId = assets.some((a) => a.id === assetIdParam) ? assetIdParam : "default-css";
+  const [selectedAssetId, setSelectedAssetId] = useState(initialAssetId);
+
+  const handleAssetChange = (id: string) => {
+    setSelectedAssetId(id);
+    const url = new URL(window.location.href);
+    url.searchParams.set("asset", id);
+    window.history.replaceState(null, "", url.toString());
+  };
+
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [generationState, setGenerationState] = useState<GenerationState>("idle");
@@ -247,7 +259,25 @@ function App() {
             inside a transparent always-on-top Electron overlay.
           </p>
         </div>
-        <CharacterStage assetId={assetIdParam} />
+        <div className="asset-selector" role="group" aria-label="Character asset">
+          {assets.map((asset) => (
+            <label
+              key={asset.id}
+              className={`asset-option${selectedAssetId === asset.id ? " selected" : ""}`}
+            >
+              <input
+                className="asset-option-input"
+                type="radio"
+                name="sandbox-asset"
+                value={asset.id}
+                checked={selectedAssetId === asset.id}
+                onChange={() => handleAssetChange(asset.id)}
+              />
+              {asset.name}
+            </label>
+          ))}
+        </div>
+        <CharacterStage assetId={selectedAssetId} />
       </section>
 
       <section className="explanation-section" aria-labelledby="explanation-title">
