@@ -117,7 +117,7 @@ These criteria apply across all of Slice 9 and must hold true at every sub-slice
 |---|---|
 | Existing desktop companion fully usable without AI | Launch app, confirm character runs with `default-css`, no AI calls in network tab |
 | `default-css` remains fallback at all times | Set `selectedCharacterId` to unknown value → companion still shows |
-| Behavior engine has zero dependency on AI or provider code | `grep -r "replicate\|fal\|meshy\|openai" apps/desktop/src/renderer/character/` → no matches |
+| Behavior engine has zero dependency on AI or provider code | `grep -r "replicate\|fal\|meshy\|openai" apps/web/src/character/` → no matches |
 | Generated assets plug into asset registry | New asset definition satisfies `CharacterAssetDefinition` type; `getCharacterAsset()` returns it |
 | No backend introduced | No Express/Fastify/database in `package.json` |
 | Safety UI present before any generation | Consent checkbox + IP warning visible in generation UI before submit |
