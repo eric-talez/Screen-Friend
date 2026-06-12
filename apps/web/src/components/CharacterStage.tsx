@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { getCharacterAsset } from "../character/characterAssets";
-import { createBehaviorEngine, type CharacterState } from "../character/behaviorEngine";
+import { createBehaviorEngine, type CharacterAction, type CharacterState } from "../character/behaviorEngine";
 
 const FRAME_INTERVAL_MS = 1_000 / 30; // 30fps budget per roadmap performance target.
 
@@ -10,15 +10,18 @@ const REACT_RADIUS_PX = 90;
 // not keep retriggering reactions every time the cooldown expires.
 const POINTER_FRESH_MS = 400;
 
-// Slice 8: use the asset registry for class names and labels.
-const asset = getCharacterAsset("default-css");
-
 interface CharacterStageProps {
   /** Slice 3: render as a transparent desktop overlay (no card chrome/status). */
   overlay?: boolean;
+  /** Slice 9B: asset to render; defaults to "default-css". */
+  assetId?: string;
 }
 
-function CharacterStage({ overlay = false }: CharacterStageProps) {
+function CharacterStage({ overlay = false, assetId = "default-css" }: CharacterStageProps) {
+  // Slice 8/9B: resolve asset inside the component so each instance can use a
+  // different renderer without sharing module-level state.
+  const asset = getCharacterAsset(assetId);
+
   const [state, setState] = useState<CharacterState | null>(null);
   const engineRef = useRef(createBehaviorEngine());
   const stageRef = useRef<HTMLDivElement | null>(null);
@@ -85,7 +88,8 @@ function CharacterStage({ overlay = false }: CharacterStageProps) {
     return () => cancelAnimationFrame(rafId);
   }, []);
 
-  const action = state?.action ?? "idle";
+  // Explicit annotation prevents `any` propagation when React types are absent.
+  const action: CharacterAction = state?.action ?? "idle";
   const x = state?.x ?? 0.5;
   const direction = state?.direction ?? 1;
   const nearEdge = x <= 0.08 || x >= 0.92;
@@ -105,26 +109,47 @@ function CharacterStage({ overlay = false }: CharacterStageProps) {
         </div>
       )}
       <div className="stage-ground" aria-hidden="true" />
-      <div
-        className={`companion ${asset.actionAssets[action].className}${nearEdge ? " companion-near-edge" : ""}`}
-        style={{
-          left: `${(x * 100).toFixed(2)}%`,
-          transform: `translateX(-50%) scaleX(${direction})`,
-        }}
-        aria-hidden="true"
-      >
-        {action === "sleep" && <span className="companion-zzz">Z z</span>}
-        {action === "react" && <span className="companion-react-mark">!</span>}
-        <div className="companion-body">
-          <div className="companion-tail" />
-          <div className="companion-head">
-            <div className={`companion-eye ${eyesClosed ? "closed" : ""}`} />
-            <div className={`companion-eye ${eyesClosed ? "closed" : ""}`} />
+
+      {asset.renderer === "css" ? (
+        <div
+          className={`companion ${asset.actionAssets[action].className}${nearEdge ? " companion-near-edge" : ""}`}
+          style={{
+            left: `${(x * 100).toFixed(2)}%`,
+            transform: `translateX(-50%) scaleX(${direction})`,
+          }}
+          aria-hidden="true"
+        >
+          {action === "sleep" && <span className="companion-zzz">Z z</span>}
+          {action === "react" && <span className="companion-react-mark">!</span>}
+          <div className="companion-body">
+            <div className="companion-tail" />
+            <div className="companion-head">
+              <div className={`companion-eye ${eyesClosed ? "closed" : ""}`} />
+              <div className={`companion-eye ${eyesClosed ? "closed" : ""}`} />
+            </div>
+            <div className="companion-leg front" />
+            <div className="companion-leg back" />
           </div>
-          <div className="companion-leg front" />
-          <div className="companion-leg back" />
         </div>
-      </div>
+      ) : (
+        <div
+          className={`companion${nearEdge ? " companion-near-edge" : ""}`}
+          style={{
+            left: `${(x * 100).toFixed(2)}%`,
+            transform: `translateX(-50%) scaleX(${direction})`,
+          }}
+          aria-hidden="true"
+        >
+          {action === "sleep" && <span className="companion-zzz">Z z</span>}
+          {action === "react" && <span className="companion-react-mark">!</span>}
+          <img
+            className="companion-sprite"
+            src={asset.actionAssets[action].spriteUrl}
+            alt=""
+            draggable={false}
+          />
+        </div>
+      )}
     </div>
   );
 }
