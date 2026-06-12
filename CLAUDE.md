@@ -35,8 +35,10 @@ This file is written for an **active pnpm workspace** that already contains `app
 | Slice 7 | Persistence (size, position, personality) | ✅ 완료 (interactive 모드·창 위치 영속화. scale/personality/intensity는 schema 저장만, 조작 UI는 후속 슬라이스) |
 | Slice 8 | Character asset pipeline (sprite sheet or GLB) | ✅ 완료 (asset registry + default-css 등록. 실제 sprite sheet asset은 후속 슬라이스) |
 | Slice 8.5 | Animation polish & surface awareness | ✅ 완료 (smoother movement, ground shadow, leg/tail walk anim, lie/sleep flat-pose fix, sleepy sway, near-edge class) |
-| Slice 9 | Optional AI custom character | 🎯 Next |
+| Slice 9 | Optional AI custom character | 🎯 Next (⚠️ sub-slice 분리 후 시작 — [custom-character-plan.md](docs/custom-character-plan.md)) |
 | Slice 10 | Packaging, QA, beta | — |
+
+⚠️ Slice 9 구현은 반드시 sub-slice 분리 후 시작. AI API는 9E 평가 문서 없이 추가 금지.
 
 One task = one slice. Do not combine slices.
 
