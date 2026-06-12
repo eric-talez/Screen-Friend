@@ -20,6 +20,9 @@ declare global {
 const overlayParams = new URLSearchParams(window.location.search);
 const isOverlayMode = overlayParams.get("mode") === "overlay";
 const isInteractive = overlayParams.get("interactive") === "1";
+// Slice 9B: ?asset=placeholder-sprite previews the sprite renderer; unknown
+// values fall back to "default-css" via getCharacterAsset().
+const assetIdParam = overlayParams.get("asset") ?? "default-css";
 
 if (isOverlayMode) {
   document.documentElement.classList.add("overlay-mode");
@@ -56,7 +59,7 @@ function OverlayApp() {
   return (
     <div className="overlay-shell">
       {interactive && <span className="overlay-debug-badge">interactive</span>}
-      <CharacterStage overlay />
+      <CharacterStage overlay assetId={assetIdParam} />
     </div>
   );
 }
@@ -244,7 +247,7 @@ function App() {
             inside a transparent always-on-top Electron overlay.
           </p>
         </div>
-        <CharacterStage />
+        <CharacterStage assetId={assetIdParam} />
       </section>
 
       <section className="explanation-section" aria-labelledby="explanation-title">
