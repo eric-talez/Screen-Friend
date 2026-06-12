@@ -790,8 +790,8 @@ h3 {
   transform: scaleX(0.95);
 }
 
-/* Slice 9B: sprite renderer image — sits above the ::after ground shadow
-   (z-index: 0) and below the zzz / react-mark overlays (z-index: 1). */
+/* Slice 9B: sprite renderer image — above ::after ground shadow (z-index: 1),
+   below zzz / react-mark overlays (z-index: 2). */
 .companion-sprite {
   position: absolute;
   left: 0;
@@ -802,7 +802,7 @@ h3 {
   pointer-events: none;
   user-select: none;
   -webkit-user-drag: none;
-  z-index: 0;
+  z-index: 1;
 }
 
 .companion-body {
@@ -887,7 +887,7 @@ h3 {
   font-weight: 800;
   color: var(--blue);
   animation: companion-zzz-float 2.2s ease-in-out infinite;
-  z-index: 1;
+  z-index: 2;
 }
 
 @keyframes companion-zzz-float {
@@ -1040,7 +1040,7 @@ h3 {
   font-weight: 800;
   color: var(--accent-strong);
   animation: companion-react-pop 0.45s ease-out;
-  z-index: 1;
+  z-index: 2;
 }
 
 @keyframes companion-react-pop {
