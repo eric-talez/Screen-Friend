@@ -817,7 +817,7 @@
         Slices 0–8.5가 완료되었다. Slice 9(Optional AI Custom Character)는 scope가 크므로,
         <strong>구현 전 반드시 sub-slice로 쪼개고 각 sub-slice를 별도 PR로 진행해야 한다.</strong>
       </p>
-      <p class="muted small">⚠️ Slice 9 전체를 한 번에 구현하지 않는다. 아래는 분리 예시일 뿐이며, 실제 분리는 별도 설계 슬라이스에서 결정한다.</p>
+      <p class="muted small">⚠️ Slice 9 전체를 한 번에 구현하지 않는다. 아래는 분리 예시일 뿐이며, 실제 분리는 별도 설계 슬라이스에서 결정한다. 전체 sub-slice 분리 계획 및 safety 규칙: <a href="custom-character-plan.md">docs/custom-character-plan.md</a></p>
       <pre><code>Goal: Plan Slice 9 — split into sub-slices before any AI implementation.
 
 Before writing code:
