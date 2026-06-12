@@ -1,6 +1,6 @@
 # Custom Character Plan — Slice 9 Sub-Slice Breakdown
 
-> Status: Slice 9A (planning) and 9B (sprite renderer foundation) complete. No AI API.
+> Status: Slice 9A (planning), 9B (sprite renderer foundation), and 9C (static asset switching UI) complete. No AI API.
 
 ---
 
@@ -99,7 +99,7 @@ The behavior engine (`behaviorEngine.ts`, `scheduler.ts`, `position.ts`, `mouse-
 |---|---|---|---|
 | **9A** | Planning spec (this doc) | No | Docs only |
 | **9B** ✅ | Sprite renderer foundation — `renderer: "sprite"` branch in CharacterStage, local placeholder SVG assets | No | Yes — renderer + local placeholder assets |
-| **9C** | Local asset import/preview or static asset switching in UI, no AI | No | Yes — UI only |
+| **9C** ✅ | Static asset switching UI in web sandbox — radio selector switches between registered local assets (`default-css`, `placeholder-sprite`); no AI, no upload, no persistence | No | Yes — UI only |
 | **9D** | Settings persistence for selected character asset ID | No | Yes — persistence only |
 | **9E** | Provider/API evaluation doc — compare Meshy, Replicate, Fal.ai, others; cost, quality, latency, data retention | No | Docs only |
 | **9F** | AI generation prototype behind explicit user action — one provider, one happy path, feature-flagged | Yes | Yes — scoped prototype |

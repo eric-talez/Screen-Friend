@@ -93,3 +93,7 @@ export const CHARACTER_ASSET_REGISTRY: Record<CharacterAssetId, CharacterAssetDe
 export function getCharacterAsset(id: string): CharacterAssetDefinition {
   return CHARACTER_ASSET_REGISTRY[id as CharacterAssetId] ?? DEFAULT_CSS_ASSET;
 }
+
+export function listCharacterAssets(): Array<{ id: CharacterAssetId; name: string; renderer: "css" | "sprite" }> {
+  return Object.values(CHARACTER_ASSET_REGISTRY).map(({ id, name, renderer }) => ({ id, name, renderer }));
+}
