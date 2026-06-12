@@ -86,7 +86,7 @@ User reference
 |---|---|
 | Asset registration | `apps/web/src/character/characterAssets.ts` — add new `CharacterAssetId` and `CharacterAssetDefinition` with `renderer: "sprite"` |
 | Runtime rendering | `apps/web/src/components/CharacterStage.tsx` — add `renderer === "sprite"` branch (Slice 9B) |
-| Persistence | `apps/desktop/src/renderer/` settings schema — extend with `selectedCharacterId` (Slice 9D) |
+| Persistence | `apps/desktop/src/settings.ts` — extend `ScreenFriendSettings` with `selectedCharacterId`; expose only a minimal preload bridge if renderer needs read/update access in a later slice (Slice 9D) |
 | Generation UI | New renderer component, not touching behavior engine (Slice 9F) |
 
 The behavior engine (`behaviorEngine.ts`, `scheduler.ts`, `position.ts`, `mouse-tracker.ts`) must remain **completely unaware** of AI or provider code at all times.
@@ -128,6 +128,6 @@ These criteria apply across all of Slice 9 and must hold true at every sub-slice
 
 - `apps/web/src/character/characterAssets.ts` — asset registry, `CharacterAssetId`, `CharacterAssetDefinition`
 - `apps/web/src/components/CharacterStage.tsx` — rendering loop, asset class lookup
-- `apps/desktop/src/renderer/` — Electron renderer, persistence schema
+- `apps/desktop/src/settings.ts` — Electron settings schema (`ScreenFriendSettings`)
+- `apps/desktop/src/renderer/` — Electron renderer
 - `docs/roadmap.html` — full roadmap context
-- Market reference: malang.lab "MacPet" (Unity + Obj-C, Instagram, 6,700+ likes in 2 days)
