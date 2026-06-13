@@ -1,10 +1,13 @@
 /**
  * Preload bridge: intentionally minimal.
  *
- * Exposes a small, read-only bridge so the renderer can detect it is
- * running inside the desktop shell, plus a single subscription for tray
- * interactive-mode changes (Slice 6). The channel name stays private to
- * this file — the renderer cannot reach arbitrary IPC channels.
+ * Exposes only what the renderer needs:
+ * - detect it is running inside the desktop shell
+ * - subscribe to tray interactive-mode changes (Slice 6)
+ * - read/write the selected local character asset ID (Slice 9D)
+ *
+ * Channel names stay private to this file — the renderer cannot reach
+ * arbitrary IPC channels.
  */
 import { contextBridge, ipcRenderer, type IpcRendererEvent } from "electron";
 
