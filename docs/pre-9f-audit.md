@@ -350,8 +350,11 @@ real provider call, personal-photo flow, or production generation merge.
 Recommended ordering:
 1. **(B1) Verify `9f-entry-decision.md §7` open questions** — confirm Recraft
    bg-removal output format (transparent PNG), empirically test V4.1 style fit on a
-   paid tier, and resolve the OpenAI policy HTTP 403 items. Record outcomes in the
-   decision note. A small docs-only or minimal test PR is the right vehicle.
+   paid tier, and resolve the OpenAI policy HTTP 403 items. The verification method,
+   required evidence, and decision criteria are defined in
+   [`9f-b1-verification-plan.md`](9f-b1-verification-plan.md) (a plan, not proof —
+   B1 remains open until a separate evidence PR records results). Record outcomes in
+   the decision note. A small docs-only or minimal test PR is the right vehicle.
 2. ~~**(B3) Document paid-tier Recraft requirement**~~ ✅ **Resolved 2026-06-13** —
    paid-tier Recraft requirement documented with official source; free-tier blocked;
    enforcement checks embedded in 9F PR requirements. See

@@ -235,6 +235,13 @@ The following items are marked `(to verify)` and must be resolved before the 9F
 PR is approved for merge. They do not block branch creation or early prototyping,
 but they block any real API call with personal photos or production use.
 
+> **Verification plan:** how each of these is to be checked (method, required
+> evidence, decision criteria) is defined in
+> [`9f-b1-verification-plan.md`](9f-b1-verification-plan.md). That document is a
+> plan, not proof — these questions remain **open** until a separate evidence PR
+> records the results. Q1/Q2 gate the Recraft primary path; Q3/Q4 gate only the
+> OpenAI fallback / personal-photo OpenAI path; Q5/Q6 are UX/design validation.
+
 | # | Item | Blocker for |
 |---|---|---|
 | 1 | **Recraft remove-background output format** — confirm it produces transparent PNG (not WebP or other format) and that the alpha channel is clean enough for the overlay | 9F merge |
