@@ -7,10 +7,18 @@
  * without touching the behavior engine or stage layout.
  *
  * Slice 9B: adds renderer: "sprite" discriminant and "placeholder-sprite" entry.
+ * Pre-9F B5: BuiltInAssetId remains a closed union for the two static assets;
+ *   CharacterAssetId is widened to string so runtime-generated IDs (Slice 9F+)
+ *   can be registered without touching this file. registerCharacterAsset() is
+ *   the safe insertion point — it rejects duplicates and blank IDs.
  */
 import type { CharacterAction } from "./behaviorEngine";
 
-export type CharacterAssetId = "default-css" | "placeholder-sprite";
+/** Compile-time IDs for the two built-in assets. */
+export type BuiltInAssetId = "default-css" | "placeholder-sprite";
+
+/** Any asset ID: built-in or runtime-generated. */
+export type CharacterAssetId = BuiltInAssetId | (string & {});
 
 /** Per-action asset for the CSS renderer. */
 export interface CharacterActionAsset {
@@ -32,13 +40,13 @@ export interface SpriteActionAsset {
 
 export type CharacterAssetDefinition =
   | {
-      id: CharacterAssetId;
+      id: string;
       name: string;
       renderer: "css";
       actionAssets: Record<CharacterAction, CharacterActionAsset>;
     }
   | {
-      id: CharacterAssetId;
+      id: string;
       name: string;
       renderer: "sprite";
       actionAssets: Record<CharacterAction, SpriteActionAsset>;
@@ -85,15 +93,27 @@ export const PLACEHOLDER_SPRITE_ASSET: CharacterAssetDefinition = {
   },
 };
 
-export const CHARACTER_ASSET_REGISTRY: Record<CharacterAssetId, CharacterAssetDefinition> = {
-  "default-css": DEFAULT_CSS_ASSET,
-  "placeholder-sprite": PLACEHOLDER_SPRITE_ASSET,
-};
+const _registry = new Map<string, CharacterAssetDefinition>([
+  ["default-css", DEFAULT_CSS_ASSET],
+  ["placeholder-sprite", PLACEHOLDER_SPRITE_ASSET],
+]);
 
-export function getCharacterAsset(id: string): CharacterAssetDefinition {
-  return CHARACTER_ASSET_REGISTRY[id as CharacterAssetId] ?? DEFAULT_CSS_ASSET;
+/**
+ * Register a runtime-generated asset (e.g. a Slice 9F AI-generated sprite).
+ * Throws if the ID is blank or already registered — callers must use a unique
+ * ID (e.g. a UUID) and should not re-register an existing built-in.
+ */
+export function registerCharacterAsset(asset: CharacterAssetDefinition): void {
+  if (!asset.id.trim()) throw new Error("registerCharacterAsset: id must not be blank");
+  if (_registry.has(asset.id)) throw new Error(`registerCharacterAsset: id "${asset.id}" is already registered`);
+  _registry.set(asset.id, asset);
 }
 
-export function listCharacterAssets(): Array<{ id: CharacterAssetId; name: string; renderer: "css" | "sprite" }> {
-  return Object.values(CHARACTER_ASSET_REGISTRY).map(({ id, name, renderer }) => ({ id, name, renderer }));
+/** Returns the asset for `id`, falling back to `default-css` for unknown IDs. */
+export function getCharacterAsset(id: string): CharacterAssetDefinition {
+  return _registry.get(id) ?? DEFAULT_CSS_ASSET;
+}
+
+export function listCharacterAssets(): Array<{ id: string; name: string; renderer: "css" | "sprite" }> {
+  return Array.from(_registry.values()).map(({ id, name, renderer }) => ({ id, name, renderer }));
 }

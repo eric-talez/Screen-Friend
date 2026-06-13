@@ -1,9 +1,10 @@
 # Pre-9F Repository Audit — Screen Friend / 화면 친구
 
-> **Status:** Audit-only report. No source code, Electron, dependency, settings,
-> asset, or provider files were modified. This document is the only change.
+> **Status:** Audit report + B2/B5 hardening resolved (pre-9f-hardening-env-and-assets PR).
 > **Audit date:** 2026-06-13.
+> **B2/B5 resolved:** 2026-06-13.
 > **Repo state audited:** `main` @ `5ee3db7` (after PR #17 — 9F entry decision note merged).
+> **Hardening applied to:** `main` @ `3375450` (after PR #18 — pre-9f-audit merged).
 
 This audit was requested before starting Slice 9F **mock scaffolding**. It covers
 product/roadmap consistency, architecture, Electron/security, 9F readiness,
@@ -266,8 +267,8 @@ merging, but should be addressed in a small hardening PR before or alongside it.
 
 | ID | Item | Why |
 |---|---|---|
-| **B2** | Add `.env` (and `.env*`) to [`.gitignore`](../.gitignore) and create `.env.example` with the placeholder var name only (`RECRAFT_API_KEY=your_key_here`). | The 9F key plan assumes a gitignored `.env`; today a bare `.env` would be committable. Land before any key handling is introduced — even in a mock slice. |
-| **B5** | Make the asset registry runtime-extensible (widen `CharacterAssetId` / registry shape) for dynamically generated assets. | The current closed union/`Record` cannot hold a generated asset entry without a type change. Safe to land in the mock slice itself. |
+| ~~**B2**~~ ✅ | ~~Add `.env` (and `.env*`) to [`.gitignore`](../.gitignore) and create `.env.example` with the placeholder var name only (`RECRAFT_API_KEY=your_key_here`).~~ **Resolved 2026-06-13:** `.env` / `.env.*` added to `.gitignore` (with `!.env.example` allowlist); `.env.example` created. | The 9F key plan assumes a gitignored `.env`; today a bare `.env` would be committable. Land before any key handling is introduced — even in a mock slice. |
+| ~~**B5**~~ ✅ | ~~Make the asset registry runtime-extensible (widen `CharacterAssetId` / registry shape) for dynamically generated assets.~~ **Resolved 2026-06-13:** `CharacterAssetId` widened to `BuiltInAssetId \| (string & {})`, registry migrated from `Record` to `Map`, `registerCharacterAsset()` safe-registration API added. | The current closed union/`Record` cannot hold a generated asset entry without a type change. Safe to land in the mock slice itself. |
 
 ### Before any **real provider call / personal-photo flow / production generation merge**
 
