@@ -1,6 +1,6 @@
 # Custom Character Plan — Slice 9 Sub-Slice Breakdown
 
-> Status: Slice 9A (planning), 9B (sprite renderer foundation), 9C (static asset switching UI), 9D (settings persistence for selected character asset ID), and 9E (provider/API evaluation — [provider-evaluation.md](provider-evaluation.md)) complete. 9F entry decision note drafted — [9f-entry-decision.md](9f-entry-decision.md). No AI API.
+> Status: Slice 9A (planning), 9B (sprite renderer foundation), 9C (static asset switching UI), 9D (settings persistence for selected character asset ID), and 9E (provider/API evaluation — [provider-evaluation.md](provider-evaluation.md)) complete. 9F entry decision note drafted — [9f-entry-decision.md](9f-entry-decision.md). **9F-1 (mock scaffold) implemented** — feature-flagged (`?customGen=1`) mock-only generation UI that registers a local placeholder-based runtime asset via `registerCharacterAsset()`, with `default-css` fallback preserved. **No real AI generation, no upload, no provider integration, and no API call exist; full Slice 9F is not complete.**
 
 ---
 
@@ -102,7 +102,8 @@ The behavior engine (`behaviorEngine.ts`, `scheduler.ts`, `position.ts`, `mouse-
 | **9C** ✅ | Static asset switching UI in web sandbox — radio selector switches between registered local assets (`default-css`, `placeholder-sprite`); no AI, no upload, no persistence | No | Yes — UI only |
 | **9D** ✅ | Settings persistence for selected character asset ID (local asset ID only; no AI/upload) | No | Yes — persistence only |
 | **9E** ✅ | Provider/API evaluation doc — compare OpenAI, Replicate, Fal.ai, Stability/Recraft, Meshy (3D, later); cost, quality, latency, data retention → [provider-evaluation.md](provider-evaluation.md) | No | Docs only |
-| **9F** | AI generation prototype behind explicit user action — one provider, one happy path, feature-flagged *(entry decision note: [9f-entry-decision.md](9f-entry-decision.md))* | Yes | Yes — scoped prototype |
+| **9F-1** ✅ | **Mock-only generation scaffold** — feature-flagged (`?customGen=1`) UI with IP warning + mock consent gate that, on an explicit click, simulates work locally and registers a placeholder-based runtime sprite asset via `registerCharacterAsset()`. No AI, no upload, no provider, no key, no network. Failure path falls back to `default-css`. | No | Yes — feature-flagged mock UI |
+| **9F** | AI generation prototype behind explicit user action — one provider, one happy path, feature-flagged *(entry decision note: [9f-entry-decision.md](9f-entry-decision.md))*. **Not yet implemented** — gated by audit blockers B1/B3/B4. | Yes | Yes — scoped prototype |
 | **9G** | Safety/consent/error UX hardening — IP warning, consent gate, provider error handling, generation failure fallback | Yes | Yes — UX layer |
 
 Each sub-slice is a self-contained, reviewable PR. Do not combine sub-slices.
