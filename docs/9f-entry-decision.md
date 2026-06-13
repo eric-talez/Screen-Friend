@@ -177,6 +177,18 @@ The future 9F implementation PR must satisfy **all** of the following before mer
 - [ ] **Zero behavior-engine dependency** — `grep -r "recraft\|openai" apps/web/src/character/` → no matches in `behaviorEngine.ts`, `scheduler.ts`, `position.ts`, `mouse-tracker.ts`
 - [ ] **`default-css` fallback preserved** — confirmed: setting `selectedCharacterId` to an unknown value still renders the companion via `default-css`
 
+> **9F vs 9G scope decision (2026-06-13):** The IP warning and personal-photo
+> consent gate above are **minimum non-negotiable requirements for the 9F
+> real-provider path** — they must be present before any real API call, regardless
+> of polish level. This does **not** mean 9F must include full UX hardening.
+> **Slice 9G** is the later hardening layer and handles: improved copy, provider
+> error state UI, retry/cost UI polish, clearer privacy/data-retention display,
+> and richer recovery/fallback UX. 9G is not the first consent gate — 9F is.
+> Keeping this split prevents 9F from silently expanding into full UX polish and
+> prevents 9G from being treated as the first safety layer. See
+> [`pre-9f-audit.md`](pre-9f-audit.md) §4 B4 and
+> [`custom-character-plan.md`](custom-character-plan.md) §3/§5.
+
 ---
 
 ## 7. Open Questions / Blockers

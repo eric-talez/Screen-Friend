@@ -1,8 +1,10 @@
 # Pre-9F Repository Audit — Screen Friend / 화면 친구
 
-> **Status:** Audit report + B2/B5 hardening resolved (pre-9f-hardening-env-and-assets PR).
+> **Status:** Audit report + B2/B5 hardening resolved (pre-9f-hardening-env-and-assets PR). B4 consent/IP-warning scope clarified. 9F-1 mock scaffold merged (PR #20).
 > **Audit date:** 2026-06-13.
 > **B2/B5 resolved:** 2026-06-13.
+> **B4 clarified:** 2026-06-13 — 9F real-provider path requires minimal safety gate; 9G is UX hardening only (see §4).
+> **9F-1 mock scaffold merged:** 2026-06-13 (PR #20) — feature-flagged mock-only generation UI; no real AI, no provider call.
 > **Repo state audited:** `main` @ `5ee3db7` (after PR #17 — 9F entry decision note merged).
 > **Hardening applied to:** `main` @ `3375450` (after PR #18 — pre-9f-audit merged).
 
@@ -23,17 +25,17 @@ engine is fully provider-agnostic, and the asset-registry seam that Slice 9F is
 meant to plug into already exists and is clean. `default-css` is preserved as the
 unconditional fallback.
 
-**Green light to begin Slice 9F as a feature-flagged, mock-only scaffold** (no
-real provider, no API key, `default-css` fallback intact) — this is explicitly
-authorized by [`9f-entry-decision.md`](9f-entry-decision.md) and carries no
-blockers today.
+**9F-1 mock scaffold has been implemented and merged (PR #20).** The feature-flagged,
+mock-only generation UI is in place — no real provider, no API key, `default-css`
+fallback intact. All hardening blockers are resolved: **B2** (`.env` gitignore + `.env.example`),
+**B5** (runtime-extensible asset registry), and **B4** (consent/IP-warning slice scope —
+9F includes minimal gate; 9G is UX hardening). See §4 for details.
 
-A handful of items should be addressed before or alongside 9F mock scaffolding
-(B2, B5 — hardening), and a separate set must be cleared **before any real
-provider call, personal-photo flow, or production generation merge** (B1, B3, B4):
-the `.env` gitignore gap, the paid-tier Recraft requirement, the open verification
-questions in the 9F decision note, the consent/IP-warning slice-ownership ambiguity,
-and the closed `CharacterAssetId` union. None are red; all are tracked below.
+**Remaining before any real provider call, personal-photo flow, or production generation
+merge: B1 and B3.** B1 = resolve `9f-entry-decision.md §7` open questions (bg-removal
+format, V4.1 style fit, OpenAI policy HTTP 403). B3 = require paid Recraft tier; document
+free-tier risks. The next step is resolving B1/B3 or preparing a real-provider verification
+plan, not starting mock scaffolding (already done). None are red; all are tracked below.
 
 ### 한국어 요약
 
@@ -41,12 +43,13 @@ and the closed `CharacterAssetId` union. None are red; all are tracked below.
   계획 트랙(9A–9E + 9F 진입 결정 노트)이 서로 모순 없이 정리되어 있습니다.
 - Electron 보안(contextIsolation/sandbox/nodeIntegration=false, 좁은 preload
   브리지, IPC 2채널)과 behavior engine의 provider 비의존성은 **GREEN**입니다.
-- **9F mock 스캐폴딩(feature-flag, 실제 키/호출 없음, default-css 유지) 시작은 즉시
-  가능**합니다. 현재 시점 블로커 없음.
-- **mock 스캐폴딩 전/병행 hardening 항목(B2, B5):** `.env` gitignore 누락,
-  닫힌 `CharacterAssetId` union — mock PR과 함께 해소 권장.
-- **실제 provider 호출 / 개인 사진 포함 흐름 / 프로덕션 생성 머지 전(B1, B3, B4):**
-  Recraft 유료 티어 강제, 9F 노트의 미검증 항목, consent/IP 경고 UI 슬라이스 귀속 모호성.
+- **9F-1 mock 스캐폴딩이 구현·머지됨(PR #20).** feature-flag, 실제 키/호출 없음,
+  default-css 유지. B2/B5/B4 모두 해소.
+- **mock 스캐폴딩 전/병행 hardening 항목(B2 ✅, B5 ✅):** 모두 해소됨.
+- **실제 provider 호출 / 개인 사진 포함 흐름 / 프로덕션 생성 머지 전(B1, B3):**
+  Recraft 유료 티어 강제, 9F 노트의 미검증 항목.
+- **B4 해소(2026-06-13):** consent/IP 경고 UI 슬라이스 귀속 명확화 — 9F 실제 provider 경로는
+  최소 안전 게이트(IP 경고 + 동의 체크박스 등) 포함 필수; 9G는 UX 심화 레이어.
 - 전체 등급: **🟡 YELLOW** (mock 시작은 green, 실제 API는 조건부). RED 없음.
 
 ---
@@ -55,16 +58,16 @@ and the closed `CharacterAssetId` union. None are red; all are tracked below.
 
 | # | Area | Status | One-line reason |
 |---|---|---|---|
-| 1 | Product / roadmap consistency | 🟡 Yellow | Vision is clear and consistent; top-level roadmap docs lag behind sub-slice progress, and consent-UI slice ownership is ambiguous. |
+| 1 | Product / roadmap consistency | 🟡 Yellow | Vision is clear and consistent; top-level roadmap docs lag behind sub-slice progress. Consent-UI slice ownership (B4) clarified 2026-06-13. |
 | 2 | Architecture | 🟢 Green | Provider-agnostic engine, clean registry seam, robust settings store, no backend creep. One note: `CharacterAssetId` is a closed compile-time union. |
 | 3 | Electron / security | 🟢 Green | Narrow preload, two scoped IPC channels, no renderer Node access. Pre-9F gap: `.env` is not gitignored. |
-| 4 | 9F readiness | 🟢 Green to scaffold / 🟡 before real API | Mock-only path is feasible and authorized; real provider calls gated by open questions. |
+| 4 | 9F readiness | 🟢 9F-1 mock done / 🟡 before real API | 9F-1 mock scaffold merged (PR #20); real provider calls gated by B1/B3. |
 | 5 | QA / test gaps | 🟡 Yellow | typecheck + desktop compile pass; **no unit tests** exist, several Mac behaviors are unverified on hardware, and a CLAUDE.md validation command is wrong. |
 | 6 | Risk register | 🟡 Yellow | Main residual risks are provider/legal (Recraft free-tier trap, retention, per-pose identity) and unverified real-device overlay behavior. |
 
-**Overall: 🟡 Yellow.** Begin 9F mock scaffolding now; address B2/B5 hardening
-items before/alongside the mock PR; resolve B1/B3/B4 before any real API call,
-personal-photo flow, or production generation merge. No red findings.
+**Overall: 🟡 Yellow.** 9F-1 mock scaffold merged. B2/B5/B4 resolved/clarified.
+Resolve B1/B3 before any real API call, personal-photo flow, or production generation
+merge. No red findings.
 
 ---
 
@@ -94,16 +97,18 @@ personal-photo flow, or production generation merge. No red findings.
   These are not wrong (Slice 9 overall is incomplete), but they hide that 9F is
   the next unit of work. A reader starting from the top-level docs would not know
   9A–9E shipped.
-- **Consent / IP-warning slice ownership is ambiguous.** Two docs place the same
-  requirement in different slices:
-  - [`9f-entry-decision.md`](9f-entry-decision.md) §6 lists "IP warning" and
-    "Personal-photo consent gate" as checkboxes the **9F PR must satisfy before merge**.
-  - [`custom-character-plan.md`](custom-character-plan.md) §3 (Future UI
-    Requirements — Slice 9G) and §5 assign IP warning + consent gate to **9G**;
-    [`provider-evaluation.md`](provider-evaluation.md) §6 criterion 4 treats it as
-    a **plan** ("plan §3 / Slice 9G").
-  This must be reconciled before the 9F PR description is written so 9F scope does
-  not silently balloon into full consent UI. (See §4 blocker B4.)
+- **Consent / IP-warning slice ownership — clarified (B4).** Two docs had placed
+  the same requirement in different slices. This has been reconciled (2026-06-13):
+  - **9F real-provider prototype must include a minimal safety gate** before any real
+    provider call — explicit user action, IP warning, personal/reference photo
+    consent checkbox, no auto-generation, visible provider/no-real-copy warning.
+    These are non-negotiable minimums; 9F scope does not expand into full UX polish.
+  - **9G is the later UX hardening layer**, not the first consent gate. 9G handles:
+    better copy, provider error states, retry/cost UI polish, clearer
+    privacy/data-retention display, richer recovery/fallback UX.
+  See §4 (B4 resolved) and updated [`9f-entry-decision.md`](9f-entry-decision.md) §6,
+  [`custom-character-plan.md`](custom-character-plan.md) §3/§5,
+  [`provider-evaluation.md`](provider-evaluation.md) §6 criterion 4.
 
 ### 3.2 Architecture — 🟢 Green
 
@@ -241,8 +246,8 @@ have been outstanding across several slices — they should be cleared before be
 |---|---|---|---|
 | **Recraft free-tier trap** — free tier is **non-commercial**, outputs are **public in the community gallery** and **owned by Recraft** ([`9f-entry-decision.md`](9f-entry-decision.md) §2.2) | Provider / legal / privacy | High | 9F must use a **paid** Recraft tier for any real generation; never run real calls on a free key. Enforce in the key/setup docs before B2/B3 close. |
 | **API key leakage** — key shipped in renderer/bundle/logs | Security | High | Plan is correct (main-process only). **Add `.env` to `.gitignore` + `.env.example` first** (B2); 9F PR must grep the bundle for the key name. |
-| **IP / copyright copying** — user requests a protected character | Legal | High | Plan §3 style-transform-only normalization + plain-language IP warning before submit. Slice ownership (9F vs 9G) must be reconciled (B4). |
-| **Real-person likeness without consent** | Legal / ethical | High | Explicit consent checkbox gate before any personal-photo submit (plan §3). Same slice-ownership question (B4). |
+| **IP / copyright copying** — user requests a protected character | Legal | High | Plan §3 style-transform-only normalization + plain-language IP warning before submit. Minimal gate required in 9F; 9G handles polish. (B4 clarified.) |
+| **Real-person likeness without consent** | Legal / ethical | High | Explicit consent checkbox gate before any personal-photo submit — required in 9F real-provider path. (B4 clarified.) |
 | **Provider data retention** — sensitive input stored/trained on | Privacy | High | Recraft API inputs documented as never used for training (note §2.2, official). OpenAI retention/commercial pages returned **403** and remain **(to verify)** before any OpenAI-path real use. |
 | **Per-pose identity drift** — 7 separate generations don't read as the same character | Quality / UX | Medium | Note §7 Q5 — unverified empirically; set user expectations ("stylize, not clone"), allow per-pose regenerate, cap retries. |
 | **Cost runaway** — retries/loops burn spend | Cost | Medium | Note §3 — hard retry cap ≤ 2/pose and per-character cost cap **enforced in the IPC handler before any call** (not policy-only). |
@@ -254,16 +259,13 @@ have been outstanding across several slices — they should be cleared before be
 
 ## 4. Blockers
 
-### Before 9F **mock scaffolding** (the immediate next step)
-**None.** Starting a feature-flagged, mock-only 9F scaffold that uses no real API
-key and preserves `default-css` is authorized by
-[`9f-entry-decision.md`](9f-entry-decision.md) and carries no blockers in the
-current repo state.
+### Before 9F **mock scaffolding** — ✅ Complete (PR #20 merged)
+9F-1 feature-flagged mock-only scaffold has been implemented and merged. No real API
+key, no provider call, `default-css` fallback preserved. This step is done.
 
-### Before / alongside 9F **mock scaffolding** — hardening items
+### Before / alongside 9F **mock scaffolding** — hardening items — ✅ Complete
 
-These items do not block the feature-flagged, mock-only scaffold from starting or
-merging, but should be addressed in a small hardening PR before or alongside it.
+These items were addressed in PR #19 (B2, B5) and are fully resolved.
 
 | ID | Item | Why |
 |---|---|---|
@@ -279,7 +281,7 @@ calls, personal-photo submission, and any 9F branch intended for production use.
 |---|---|---|
 | **B1** | Resolve [`9f-entry-decision.md`](9f-entry-decision.md) §7 open questions — esp. Q1 (Recraft bg-removal output = transparent PNG?), Q2 (V4.1 style fit, needs a paid account), Q3/Q4 (OpenAI commercial-rights & retention pages returned HTTP 403). | The decision note itself marks these `(to verify)` and forbids real calls / production merge until resolved. |
 | **B3** | Require a **paid** Recraft tier for real generation; document that free-tier output is non-commercial, public, and Recraft-owned. | Using a free key would publish user-derived characters and forfeit ownership — a privacy/legal trap. |
-| **B4** | Reconcile whether the IP warning + personal-photo consent gate are **9F-merge requirements** (per 9F note §6) or **9G deliverables** (per plan §3/§5, provider-evaluation §6). | Prevents 9F scope from silently expanding into full consent UI, or from shipping a real-call path without consent. |
+| ~~**B4**~~ ✅ | ~~Reconcile whether the IP warning + personal-photo consent gate are **9F-merge requirements** (per 9F note §6) or **9G deliverables** (per plan §3/§5, provider-evaluation §6).~~ **Clarified 2026-06-13:** 9F real-provider prototype must include the minimum safety gate — explicit user action, IP warning, personal/reference photo consent checkbox, no auto-generation, visible provider/no-real-copy warning — before any real API call. This is not a full UX polish; 9G is the later hardening layer (better copy, provider error states, retry/cost UI polish, clearer privacy/data-retention display, richer recovery/fallback UX). See updated [`9f-entry-decision.md`](9f-entry-decision.md) §6, [`custom-character-plan.md`](custom-character-plan.md) §3/§5, [`provider-evaluation.md`](provider-evaluation.md) §6 criterion 4. | Prevents 9F scope from silently expanding into full consent UI, or from shipping a real-call path without consent. Prevents 9G from being confused with the first safety gate. |
 
 ---
 
@@ -332,29 +334,34 @@ isolation grep, network-call grep, `git ls-files` for `.env`, IPC-handler grep.
 
 ## 7. Suggested Next Slice
 
-**Proceed with Slice 9F as a mock-only, feature-flagged scaffold** — one provider
-abstraction with a **mock implementation only** (no real key, no network call),
-registering a generated-style asset through the existing `characterAssets.ts`
-seam, gated behind a runtime/compile feature flag that is **off by default**, with
-`default-css` preserved as fallback.
+> **Note:** This section was originally written before 9F mock scaffolding. As of
+> 2026-06-13, B2/B5 hardening (PR #19) and 9F-1 mock scaffold (PR #20) are done.
+> B4 consent/IP-warning scope has been clarified (PR #21). The guidance below is
+> updated to reflect the current state.
+
+**The immediate next step is resolving B1 and B3** before any real provider call,
+personal-photo flow, or production generation merge.
 
 Recommended ordering:
-1. **(Tiny pre-req chore)** Land B2 + B5 first as a small hardening PR — add
-   `.env*` to `.gitignore`, create `.env.example`, and widen the asset registry to
-   be runtime-extensible. This lets the real-call 9F later land clean.
-2. **(Slice 9F mock)** Build the feature-flagged mock generation path and UI entry
-   point that registers a sprite asset locally — no provider SDK, no key.
-3. Defer real Recraft calls until **B1, B3, B4** are resolved and the 9F PR
-   checklist in [`9f-entry-decision.md`](9f-entry-decision.md) §6 is satisfied.
+1. **(B1) Verify `9f-entry-decision.md §7` open questions** — confirm Recraft
+   bg-removal output format (transparent PNG), empirically test V4.1 style fit on a
+   paid tier, and resolve the OpenAI policy HTTP 403 items. Record outcomes in the
+   decision note. A small docs-only or minimal test PR is the right vehicle.
+2. **(B3) Document paid-tier Recraft requirement** — record that free-tier Recraft
+   output is non-commercial, public, and Recraft-owned; require a paid key for any
+   real generation; add a guard to the key/setup docs.
+3. **(9F real-provider)** Once B1 + B3 are satisfied and the
+   [`9f-entry-decision.md`](9f-entry-decision.md) §6 PR checklist is met (including
+   the minimal safety gate — see B4 resolution), implement the real-provider 9F path.
 
-Keep one task = one slice (CLAUDE.md). Do not combine the hardening chore, the
-mock scaffold, and any real-API work into a single PR.
+Keep one task = one slice (CLAUDE.md). Do not combine B1/B3 verification, the
+real-provider 9F implementation, and any UX hardening into a single PR.
 
 ---
 
 ## 8. Recommended Validation Commands
 
-For the **next 9F mock scaffold** PR (renderer + possibly main-process flag):
+For the **next real-provider 9F** PR (renderer + main-process provider call):
 
 ```sh
 pnpm install

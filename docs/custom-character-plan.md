@@ -52,13 +52,27 @@ The generated output must be a **stylized mascot transformation**, not a copy of
 
 No real-person likeness generation without an explicit consent acknowledgment step in the UI.
 
-### Future UI Requirements (Slice 9G)
+### Minimum Safety Gate — 9F real-provider path (required before any real API call)
 
-Before any generation request is submitted:
+The following are non-negotiable minimums that the 9F real-provider prototype must
+include **before any real provider call is made**. They are not full UX polish; they
+are the floor below which no real API call may be permitted:
 
-1. Display a plain-language IP warning ("We stylize, not copy. Do not upload characters you don't own.").
-2. Require an explicit checkbox for personal/reference photos ("I consent to this image being processed.").
-3. Communicate provider data retention policy if applicable.
+1. Explicit user action — no auto-generation; one deliberate button press = one generation request.
+2. Plain-language IP warning displayed before the submit button is enabled ("We stylize, not copy. Do not upload characters you don't own.").
+3. Explicit checkbox for personal/reference photos ("I consent to this image being processed.") — submit blocked until checked.
+4. Visible provider warning — user can see which provider will receive the image.
+
+### Future UI Requirements — Slice 9G (UX hardening, not the first consent gate)
+
+9G is the later UX hardening layer. It handles polish and robustness **on top of**
+the minimal 9F safety gate. 9G is not the first consent gate:
+
+1. Improved copy and clearer consent language.
+2. Provider error state UI (rate limits, moderation refusals, network failures).
+3. Retry/cost UI polish — visible per-character cost estimate, retry feedback.
+4. Clearer privacy/provider data-retention display.
+5. Richer recovery/fallback UX (e.g., smooth revert to `default-css` with explanation).
 
 ---
 
@@ -103,8 +117,8 @@ The behavior engine (`behaviorEngine.ts`, `scheduler.ts`, `position.ts`, `mouse-
 | **9D** ✅ | Settings persistence for selected character asset ID (local asset ID only; no AI/upload) | No | Yes — persistence only |
 | **9E** ✅ | Provider/API evaluation doc — compare OpenAI, Replicate, Fal.ai, Stability/Recraft, Meshy (3D, later); cost, quality, latency, data retention → [provider-evaluation.md](provider-evaluation.md) | No | Docs only |
 | **9F-1** ✅ | **Mock-only generation scaffold** — feature-flagged (`?customGen=1`) UI with IP warning + mock consent gate that, on an explicit click, simulates work locally and registers a placeholder-based runtime sprite asset via `registerCharacterAsset()`. No AI, no upload, no provider, no key, no network. Failure path falls back to `default-css`. | No | Yes — feature-flagged mock UI |
-| **9F** | AI generation prototype behind explicit user action — one provider, one happy path, feature-flagged *(entry decision note: [9f-entry-decision.md](9f-entry-decision.md))*. **Not yet implemented** — gated by audit blockers B1/B3/B4. | Yes | Yes — scoped prototype |
-| **9G** | Safety/consent/error UX hardening — IP warning, consent gate, provider error handling, generation failure fallback | Yes | Yes — UX layer |
+| **9F** | AI generation prototype behind explicit user action — one provider, one happy path, feature-flagged, with minimal safety gate (IP warning + consent checkbox) before any real API call *(entry decision note: [9f-entry-decision.md](9f-entry-decision.md))*. **Not yet implemented** — gated by audit blockers B1/B3. (B4 clarified 2026-06-13 — see §3.) | Yes | Yes — scoped prototype |
+| **9G** | UX hardening layer — improved copy, provider error state UI, retry/cost UI polish, clearer privacy/data-retention display, richer recovery/fallback UX. **Not the first consent gate** — 9F already includes the minimal safety gate; 9G polishes it. | Yes | Yes — UX hardening |
 
 Each sub-slice is a self-contained, reviewable PR. Do not combine sub-slices.
 
