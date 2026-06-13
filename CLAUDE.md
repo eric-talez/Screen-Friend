@@ -38,7 +38,7 @@ This file is written for an **active pnpm workspace** that already contains `app
 | Slice 9 | Optional AI custom character | 🎯 Next (⚠️ sub-slice 분리 후 시작 — [custom-character-plan.md](docs/custom-character-plan.md)) |
 | Slice 10 | Packaging, QA, beta | — |
 
-⚠️ Slice 9 구현은 반드시 sub-slice 분리 후 시작. AI API는 9E 평가 문서 없이 추가 금지.
+⚠️ Slice 9 구현은 반드시 sub-slice 분리 후 시작. AI API는 9E 평가 문서 없이 추가 금지. (9E 평가 문서 완료: [docs/provider-evaluation.md](docs/provider-evaluation.md) — 9F 진입 조건 포함. Slice 9 전체는 아직 미완료.)
 
 One task = one slice. Do not combine slices.
 

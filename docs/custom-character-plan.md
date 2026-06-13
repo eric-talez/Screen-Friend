@@ -1,6 +1,6 @@
 # Custom Character Plan — Slice 9 Sub-Slice Breakdown
 
-> Status: Slice 9A (planning), 9B (sprite renderer foundation), 9C (static asset switching UI), and 9D (settings persistence for selected character asset ID) complete. No AI API.
+> Status: Slice 9A (planning), 9B (sprite renderer foundation), 9C (static asset switching UI), 9D (settings persistence for selected character asset ID), and 9E (provider/API evaluation — [provider-evaluation.md](provider-evaluation.md)) complete. No AI API.
 
 ---
 
@@ -101,7 +101,7 @@ The behavior engine (`behaviorEngine.ts`, `scheduler.ts`, `position.ts`, `mouse-
 | **9B** ✅ | Sprite renderer foundation — `renderer: "sprite"` branch in CharacterStage, local placeholder SVG assets | No | Yes — renderer + local placeholder assets |
 | **9C** ✅ | Static asset switching UI in web sandbox — radio selector switches between registered local assets (`default-css`, `placeholder-sprite`); no AI, no upload, no persistence | No | Yes — UI only |
 | **9D** ✅ | Settings persistence for selected character asset ID (local asset ID only; no AI/upload) | No | Yes — persistence only |
-| **9E** | Provider/API evaluation doc — compare Meshy, Replicate, Fal.ai, others; cost, quality, latency, data retention | No | Docs only |
+| **9E** ✅ | Provider/API evaluation doc — compare OpenAI, Replicate, Fal.ai, Stability/Recraft, Meshy (3D, later); cost, quality, latency, data retention → [provider-evaluation.md](provider-evaluation.md) | No | Docs only |
 | **9F** | AI generation prototype behind explicit user action — one provider, one happy path, feature-flagged | Yes | Yes — scoped prototype |
 | **9G** | Safety/consent/error UX hardening — IP warning, consent gate, provider error handling, generation failure fallback | Yes | Yes — UX layer |
 
@@ -130,4 +130,5 @@ These criteria apply across all of Slice 9 and must hold true at every sub-slice
 - `apps/web/src/components/CharacterStage.tsx` — rendering loop, asset class lookup
 - `apps/desktop/src/settings.ts` — Electron settings schema (`ScreenFriendSettings`)
 - `apps/desktop/src/renderer/` — Electron renderer
+- `docs/provider-evaluation.md` — Slice 9E provider/API evaluation and 9F entry criteria
 - `docs/roadmap.html` — full roadmap context

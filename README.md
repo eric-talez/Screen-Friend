@@ -36,7 +36,7 @@ The core companion MVP is working:
 
 What remains: optional AI custom character (Slice 9 — split before starting), packaging/signing/distribution (Slice 10). Do not add backend services, Meshy integration, API keys, or AI generation without first planning Slice 9 sub-slices.
 
-> See [docs/custom-character-plan.md](docs/custom-character-plan.md) for the sub-slice breakdown and safety/consent plan before starting Slice 9 implementation.
+> See [docs/custom-character-plan.md](docs/custom-character-plan.md) for the sub-slice breakdown and safety/consent plan before starting Slice 9 implementation. The Slice 9E provider/API evaluation (image-generation options, cost/quality/retention, and 9F entry criteria) is in [docs/provider-evaluation.md](docs/provider-evaluation.md).
 
 ## Commands
 
@@ -155,5 +155,5 @@ See [docs/qa-checklist.md](docs/qa-checklist.md) for the full checklist covering
 - Tray scale/position/personality controls — later slice, building on the Slice 7 settings store.
 - Packaging, signing, and distribution — Slice 10.
 - Backend/API integration.
-- Meshy or other AI generation services.
+- Meshy or other AI generation services (3D/GLB is deferred; see the [provider evaluation](docs/provider-evaluation.md)).
 - GLB loading and generated model replacement.
