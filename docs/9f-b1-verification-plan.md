@@ -26,8 +26,10 @@ separate evidence PR (see §6) records the results.
 > ZDR/Modified-Abuse-Monitoring opt-out, from official OpenAI developer docs), left
 > **Q1** only **partially verified — paid-tier artifact still required**, and left
 > **Q3 Blocked** (official commercial-rights/Terms pages still return HTTP 403).
-> **B1 remains open** — Q1 needs an artifact, Q3 is Blocked, and Q2/Q5/Q6 still need a
-> paid-tier test.
+> **B1 remains open** as an overall tracker. Gates are path-specific: the **Recraft
+> primary path** (Group A) still needs Q1's paid-tier artifact + Q2 style-fit; the
+> **OpenAI fallback path** (Group B) still needs Q3 commercial-rights evidence; and
+> Q5/Q6 are UX/design validation. None of these are resolved yet.
 
 Scope guardrails for this plan and the follow-up evidence work:
 
@@ -49,7 +51,7 @@ The six questions do **not** all gate the same thing. Keep these separate:
 
 ## 2. B1 Checklist
 
-All rows start at **To verify**. This PR does not change any status.
+Rows reflect the latest recorded evidence. This PR records official-doc evidence only; it does not resolve B1.
 
 | ID | Question | Verification method | Required evidence | Status |
 |---|---|---|---|---|
@@ -63,8 +65,9 @@ All rows start at **To verify**. This PR does not change any status.
 Status legend: **To verify** (not yet checked) · **Partially verified** (official-doc evidence recorded but a required artifact/element is still missing — not fully resolved) · **Verified** (evidence recorded, official source where applicable) · **Blocked** (cannot be verified — e.g. official page inaccessible, or no paid key available).
 
 > **None of these status changes resolve B1.** Even with Q4 Verified, B1 stays **open**
-> until Q1 has its paid-tier artifact, Q3 is unblocked, and Q2/Q5/Q6 are tested on a
-> paid Recraft tier. See §3a and §6.
+> as an overall tracker: the **Recraft primary path** still needs Q1's paid-tier artifact
+> and Q2 style-fit; the **OpenAI fallback path** still needs Q3 commercial-rights
+> evidence; Q5/Q6 are UX/design validation. See §3a and §6.
 
 ---
 
@@ -135,10 +138,11 @@ item moved toward **Verified**.
 - **Q3:** **Blocked** — official commercial-rights source inaccessible (403).
 - **Q4:** **Verified** — official OpenAI developer docs.
 
-**B1 remains OPEN after this pass.** Resolving Q4 alone does not unblock anything: the
-Recraft primary path (Group A) still needs Q1's paid-tier artifact and Q2; the OpenAI
-fallback path (Group B) still needs Q3. No real provider call, personal-photo flow, or
-production generation merge may proceed.
+**B1 remains OPEN after this pass.** Resolving Q4 alone does not unblock the Recraft
+primary path — that still needs Q1's paid-tier artifact (Group A) and Q2 style-fit.
+The OpenAI fallback path (Group B) still needs Q3 commercial-rights evidence.
+Q5/Q6 are UX/design validation (Group C). No real provider call, personal-photo flow,
+or production generation merge may proceed.
 
 ---
 

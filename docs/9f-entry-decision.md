@@ -246,8 +246,9 @@ but they block any real API call with personal photos or production use.
 > [`9f-b1-verification-plan.md` §3a](9f-b1-verification-plan.md#3a-evidence-log--official-doc-pass-2026-06-13).
 > It moved **Q4 → Verified** (official OpenAI developer docs), left **Q1** only
 > partially verified (paid-tier artifact still required), and left **Q3 Blocked**
-> (official commercial-rights/Terms pages still 403). **B1 is not resolved** — it
-> remains open pending Q1's artifact, Q2/Q5/Q6, and Q3.
+> (official commercial-rights/Terms pages still 403). **B1 is not resolved.**
+> Gates are path-specific: Recraft primary path needs Q1's artifact and Q2;
+> OpenAI fallback needs Q3; Q5/Q6 are UX/design validation.
 
 | # | Item | Blocker for |
 |---|---|---|
