@@ -215,7 +215,11 @@ following are decided and recorded:
 3. **Explicit user-action UX** — generation only ever fires from a deliberate
    user action (button), never automatically; one action = one generation.
 4. **Consent / IP-warning UI plan** — plain-language IP warning + explicit
-   personal-photo consent checkbox shown before submit (plan §3 / Slice 9G).
+   personal-photo consent checkbox shown before submit. These are **minimum 9F
+   real-provider requirements** (not deferred to 9G). Scope decision (2026-06-13):
+   9F must include the minimal safety gate before any real provider call; 9G is the
+   later UX hardening layer (better copy, error states, polish) — not the first gate.
+   See [custom-character-plan.md §3](custom-character-plan.md).
 5. **Rate / cost guardrail** — per-character generation cap, retry limit, and a
    spend/quota guard defined before the first real call.
 6. **No behavior-engine dependency** — `behaviorEngine.ts`, `scheduler.ts`,
