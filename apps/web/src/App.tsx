@@ -95,12 +95,19 @@ function App() {
     }
   }, []);
 
+  // Slice 9F-1: runtime mock asset IDs are renderer-local and must never be
+  // persisted to desktop settings (a restart has no such asset registered, so it
+  // would fall back to default-css). Prefix matches MockGenerationPanel's IDs.
+  const isRuntimeMockAssetId = (id: string) => id.startsWith("mock-generated-");
+
   const handleAssetChange = (id: string) => {
     setSelectedAssetId(id);
     const url = new URL(window.location.href);
     url.searchParams.set("asset", id);
     window.history.replaceState(null, "", url.toString());
-    void window.screenFriend?.setSelectedCharacterId?.(id);
+    if (!isRuntimeMockAssetId(id)) {
+      void window.screenFriend?.setSelectedCharacterId?.(id);
+    }
   };
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
