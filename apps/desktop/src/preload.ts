@@ -9,6 +9,8 @@
 import { contextBridge, ipcRenderer, type IpcRendererEvent } from "electron";
 
 const INTERACTIVE_CHANGED_CHANNEL = "screen-friend:interactive-changed";
+const GET_SELECTED_CHARACTER_ID_CHANNEL = "screen-friend:get-selected-character-id";
+const SET_SELECTED_CHARACTER_ID_CHANNEL = "screen-friend:set-selected-character-id";
 
 contextBridge.exposeInMainWorld("screenFriend", {
   shell: "electron",
@@ -21,5 +23,11 @@ contextBridge.exposeInMainWorld("screenFriend", {
     return () => {
       ipcRenderer.removeListener(INTERACTIVE_CHANGED_CHANNEL, listener);
     };
+  },
+  getSelectedCharacterId(): Promise<string> {
+    return ipcRenderer.invoke(GET_SELECTED_CHARACTER_ID_CHANNEL);
+  },
+  setSelectedCharacterId(id: string): Promise<void> {
+    return ipcRenderer.invoke(SET_SELECTED_CHARACTER_ID_CHANNEL, id);
   },
 });

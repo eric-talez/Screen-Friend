@@ -14,6 +14,8 @@ declare global {
       shell: string;
       shellVersion: string;
       onInteractiveChanged?: (callback: (interactive: boolean) => void) => () => void;
+      getSelectedCharacterId?: () => Promise<string>;
+      setSelectedCharacterId?: (id: string) => Promise<void>;
     };
   }
 }
@@ -23,7 +25,8 @@ const isOverlayMode = overlayParams.get("mode") === "overlay";
 const isInteractive = overlayParams.get("interactive") === "1";
 // Slice 9B: ?asset=placeholder-sprite previews the sprite renderer; unknown
 // values fall back to "default-css" via getCharacterAsset().
-const assetIdParam = overlayParams.get("asset") ?? "default-css";
+const assetIdFromUrl = overlayParams.get("asset");
+const assetIdParam = assetIdFromUrl ?? "default-css";
 
 if (isOverlayMode) {
   document.documentElement.classList.add("overlay-mode");
@@ -52,15 +55,23 @@ type GenerationState = "idle" | "ready" | "generating" | "success" | "error";
 
 function OverlayApp() {
   const [interactive, setInteractive] = useState(isInteractive);
+  // URL ?asset= is a dev override; when absent, load from persisted setting.
+  const [assetId, setAssetId] = useState(assetIdParam);
 
   useEffect(() => {
     return window.screenFriend?.onInteractiveChanged?.(setInteractive);
   }, []);
 
+  useEffect(() => {
+    if (assetIdFromUrl === null) {
+      void window.screenFriend?.getSelectedCharacterId?.().then(setAssetId);
+    }
+  }, []);
+
   return (
     <div className="overlay-shell">
       {interactive && <span className="overlay-debug-badge">interactive</span>}
-      <CharacterStage overlay assetId={assetIdParam} />
+      <CharacterStage overlay assetId={assetId} />
     </div>
   );
 }
@@ -70,11 +81,22 @@ function App() {
   const initialAssetId = assets.some((a) => a.id === assetIdParam) ? assetIdParam : "default-css";
   const [selectedAssetId, setSelectedAssetId] = useState(initialAssetId);
 
+  useEffect(() => {
+    const sf = window.screenFriend;
+    if (sf?.getSelectedCharacterId) {
+      void sf.getSelectedCharacterId().then((id) => {
+        const valid = assets.some((a) => a.id === id) ? id : "default-css";
+        setSelectedAssetId(valid);
+      });
+    }
+  }, []);
+
   const handleAssetChange = (id: string) => {
     setSelectedAssetId(id);
     const url = new URL(window.location.href);
     url.searchParams.set("asset", id);
     window.history.replaceState(null, "", url.toString());
+    void window.screenFriend?.setSelectedCharacterId?.(id);
   };
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
