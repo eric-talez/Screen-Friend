@@ -88,14 +88,14 @@ confirmed are `(to verify)`.
 |---|---|---|---|---|---|
 | **2D sprite suitability** | Good — strong stylization, prompt-following | Good — model choice (FLUX/Recraft/SDXL) | Good — same model breadth | OK — capable but less style-locked | **Good** — built for flat/branded/vector art |
 | **Multi-pose consistency** | OK — edit/reference-image flows help, but per-pose drift is the core risk *(to verify per model)* | OK — depends on chosen model; some support reference/IP-adapter *(to verify)* | OK — same caveat *(to verify)* | Weak/OK *(to verify)* | OK — style controls help; per-pose identity still a risk *(to verify)* |
-| **Transparent / alpha** | **Good** — native `background:"transparent"` → PNG/WebP on supported GPT-Image models. **Note:** support is model-specific; some newer variants reportedly **reject** transparent. *(to verify exact model)* | OK — via dedicated bg-removal models (e.g. Recraft remove-bg) as a 2nd step | OK — Recraft/other models or a bg-removal step | Weak/OK — generally needs a bg-removal step *(to verify)* | **Good** — native transparent PNG + vector/SVG output |
+| **Transparent / alpha** | **Conditional** — transparent output exists on *some* GPT Image models via `background:"transparent"`, but **exact current model support must be verified against official OpenAI docs before 9F** (support is model-specific and some variants reportedly reject the parameter). If no currently supported model provides native alpha, 9F must either (a) add a one-step background-removal pipeline, or (b) switch to Recraft as primary provider. *(to verify)* | OK — via dedicated bg-removal models (e.g. Recraft remove-bg) as a 2nd step | OK — Recraft/other models or a bg-removal step | Weak/OK — generally needs a bg-removal step *(to verify)* | **Good** — native transparent PNG + vector/SVG output (better-documented than OpenAI's model-specific alpha) |
 
 ### 3.2 Operational
 
 | Dimension | OpenAI image | Replicate | fal.ai | Stability AI | Recraft |
 |---|---|---|---|---|---|
 | **API ergonomics** | Good — single first-party SDK, stable surface | Good — uniform run/predictions API across models | Good — uniform pay-as-you-go API | OK — first-party REST | OK — own REST, also reachable via marketplaces |
-| **Cost model** | Per output image, by quality+size: ~$0.005–$0.25/image *(GPT-Image-1 ~$0.011–$0.25; deprecating 2026-10-23)* | Per-run, varies by model (fractions of a cent → few cents) | Per-image / per-megapixel (e.g. FLUX schnell ~$0.003/MP; many models ~$0.01–$0.08/img) | Credit-based: 1 credit = $0.01; ~$0.065/gen for SD3.5; $20/mo membership for 6000 credits | Fixed per image: ~$0.04 raster / ~$0.08 vector (V3); ~$0.022 / ~$0.044 (20B) |
+| **Cost model** | Per output image, by quality+size: ~$0.005–$0.25/image *(GPT-Image-1 ~$0.011–$0.25 — pricing and model availability are point-in-time figures from third-party sources; any deprecation timeline must be verified against official OpenAI docs before 9F)* **(to verify)** | Per-run, varies by model (fractions of a cent → few cents) | Per-image / per-megapixel (e.g. FLUX schnell ~$0.003/MP; many models ~$0.01–$0.08/img) | Credit-based: 1 credit = $0.01; ~$0.065/gen for SD3.5; $20/mo membership for 6000 credits | Fixed per image: ~$0.04 raster / ~$0.08 vector (V3); ~$0.022 / ~$0.044 (20B) |
 | **Latency** | OK–Good *(to verify — varies by quality tier)* | OK — includes cold-start/boot on some models *(to verify)* | Good — optimized for low latency *(to verify)* | OK *(to verify)* | OK *(to verify)* |
 | **Implementation complexity** | Low — one provider, native alpha, no separate bg step | Medium — pick model + likely a separate bg-removal step | Medium — same as Replicate | Medium — model + bg-removal step | Low–Medium — native alpha, but extra account/key if used directly |
 | **Vendor lock-in** | Higher — first-party API shape | Lower — marketplace, swap models behind one key | Lower — marketplace, swap models | Medium | Medium — but also reachable via Replicate/fal, reducing lock-in |
@@ -128,18 +128,20 @@ Concretely:
    per-pose animation, and weight the companion doesn't need. (If a future slice
    ever justifies GLB, that is a separate evaluation, with Meshy as the on-record
    candidate.)
-2. **Primary candidate: OpenAI image generation** — it has the simplest path to a
-   working prototype: first-party SDK, **native transparent PNG**, built-in
-   safety moderation, and a single vendor relationship (no separate bg-removal
-   step). This minimizes 9F surface area.
-   - **Watch item:** transparent-background support is **model-specific** and
-     GPT-Image-1 is slated to deprecate (reported 2026-10-23). 9F must pin a
-     specific model that *does* support transparent output and confirm it before
-     building. **(to verify exact model + alpha support at build time.)**
-3. **Fallback / alternative candidate: Recraft (directly or via Replicate/fal)**
-   — built for flat, clean, transparent mascot/vector art with native alpha;
-   reachable through a marketplace key to reduce lock-in. Good second source if
-   OpenAI's style or alpha support disappoints.
+2. **Primary candidate: OpenAI image generation** — *if and only if* an exact
+   current model that supports `background:"transparent"` is confirmed against
+   official OpenAI docs. If confirmed, it offers the simplest 9F path:
+   first-party SDK, single vendor, built-in safety moderation, no separate
+   bg-removal step needed. **If no currently supported OpenAI model provides
+   native transparent output at 9F start, use Recraft as the primary provider
+   instead.** Verifying this is **the first step before any 9F coding.**
+   **(to verify — exact model ID + alpha support against official docs.)**
+3. **Safer first-provider alternative: Recraft (directly or via Replicate/fal)**
+   — native transparent PNG and vector/SVG output that is better-documented
+   than OpenAI's model-specific alpha. Built for flat, clean, transparent
+   mascot/vector art. Reachable through a marketplace key to reduce lock-in.
+   Prefer Recraft as primary if OpenAI transparent support cannot be confirmed
+   before 9F starts.
 4. **Always-on local fallback: `default-css`.** Never gate the companion on a
    successful generation. Any failure (network, moderation refusal, bad alpha)
    falls back to `default-css`, exactly as today.
@@ -158,6 +160,25 @@ Concretely:
       whether a no-retention / opt-out path exists — **(to verify)**.
 - [ ] **Latency** at the chosen quality tier is acceptable for a foreground UX — **(to verify)**.
 - [ ] **Content-safety** behavior on a personal-photo input (what gets refused) — **(to verify)**.
+
+### Provider decision gate for 9F (must record before coding starts)
+
+Before writing any 9F code, record all of the following in a short decision
+note (a dedicated section in the 9F PR description is sufficient):
+
+| Item | To fill in before 9F |
+|---|---|
+| Exact provider name | |
+| Exact model ID | |
+| Transparent output plan | Native alpha confirmed? Or which bg-removal step? |
+| Fallback / bg-removal model | (if native alpha not available) |
+| Cost estimate per full 7-pose character | 7 images × price + expected retries |
+| Data retention / training-opt-out policy | Source link required |
+| Commercial rights terms | Source link + plan-tier required |
+| API key storage plan | Must be main-process only, not committed, not logged |
+
+This gate exists so that all 9F contributors start from the same verified
+baseline, not from the provisional provider comparison in this doc.
 
 ---
 
