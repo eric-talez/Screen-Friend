@@ -11,7 +11,7 @@
  * Slice 7 persists preferences (interactive mode, window bounds, plus
  * scale/personality/behavior intensity for future slices) via ./settings.
  */
-import { app, BrowserWindow, Menu, nativeImage, screen, Tray } from "electron";
+import { app, BrowserWindow, ipcMain, Menu, nativeImage, screen, Tray } from "electron";
 import * as path from "node:path";
 import {
   DEFAULT_SETTINGS,
@@ -213,6 +213,17 @@ function createTray(): void {
 app.whenReady().then(() => {
   settings = loadSettings();
   interactiveMode = INTERACTIVE_ENV_OVERRIDE || settings.interactiveMode;
+
+  ipcMain.handle("screen-friend:get-selected-character-id", () => {
+    return settings.selectedCharacterId;
+  });
+
+  ipcMain.handle("screen-friend:set-selected-character-id", (_event, id: unknown) => {
+    if (typeof id === "string") {
+      settings.selectedCharacterId = id;
+      saveSettings(settings);
+    }
+  });
 
   createMainWindow();
   createTray();

@@ -23,6 +23,7 @@ export interface ScreenFriendSettings {
   scale: number;
   personality: "calm" | "playful";
   behaviorIntensity: "low" | "normal" | "high";
+  selectedCharacterId: string;
 }
 
 const SETTINGS_FILE = "screen-friend-settings.json";
@@ -36,6 +37,7 @@ export const DEFAULT_SETTINGS: ScreenFriendSettings = {
   scale: 1,
   personality: "calm",
   behaviorIntensity: "normal",
+  selectedCharacterId: "default-css",
 };
 
 const SCALE_MIN = 0.5;
@@ -98,6 +100,10 @@ function sanitizeSettings(value: unknown): ScreenFriendSettings {
       raw.behaviorIntensity === "high"
         ? raw.behaviorIntensity
         : DEFAULT_SETTINGS.behaviorIntensity,
+    selectedCharacterId:
+      typeof raw.selectedCharacterId === "string"
+        ? raw.selectedCharacterId
+        : DEFAULT_SETTINGS.selectedCharacterId,
   };
 }
 
