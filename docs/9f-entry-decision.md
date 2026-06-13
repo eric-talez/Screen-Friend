@@ -161,10 +161,48 @@ Architecture description — no code written here.
 
 ---
 
+## 5a. Paid-Tier Requirement
+
+**Real Recraft generation requires a paid Recraft account and a paid-tier API key.
+Free-tier keys must not be used for any real generation call.**
+
+### Why free-tier is blocked
+
+Per the source verified in §2.2 ([Recraft commercial rights and ownership](https://www.recraft.ai/docs/plans-and-billing/commercial-rights-and-ownership.md), Official, 2026-06-13):
+
+| Property | Free tier | Paid tier |
+|---|---|---|
+| Commercial use | **Not permitted** | Permitted |
+| Image visibility | **Public in community gallery** | Private |
+| Output ownership | **Property of Recraft** | Full ownership by user |
+| Use in shippable product | **Not allowed** | Allowed |
+
+Using a free-tier key would:
+
+- Publish user-derived companion characters to the public Recraft community gallery without the user's knowledge or consent
+- Forfeit output ownership to Recraft — the user would not own the generated character assets
+- Prohibit commercial use of the generated assets in the shipped product
+
+These are not implementation details — they are legal and privacy hard-stops. No workaround exists on the free tier.
+
+### Enforcement — before any real provider call
+
+The following checks are required before any real Recraft API call is made. They must be satisfied at the time of the 9F implementation PR, not at a later UX-hardening stage:
+
+- [ ] **Verify paid tier** — confirm the API key belongs to a paid Recraft account (check account plan in the Recraft dashboard before the 9F PR is reviewed)
+- [ ] **Document plan tier in PR description** — state which paid plan tier the test/integration key belongs to; link to the plan page or include a screenshot of the account tier
+- [ ] **Block if tier unknown** — if paid-tier status cannot be confirmed at PR review time, do not make any real API call; the PR must not be merged
+- [ ] **No free-tier bypass** — reject any setup guide, onboarding path, or test harness that suggests using a free-tier key "to test" before committing to a paid key
+
+> **Terms are point-in-time (verified 2026-06-13).** Re-verify the [Recraft plans and commercial rights page](https://www.recraft.ai/docs/plans-and-billing/commercial-rights-and-ownership.md) before any 9F production merge. Plan structures and terms may change.
+
+---
+
 ## 6. 9F PR Requirements
 
 The future 9F implementation PR must satisfy **all** of the following before merge:
 
+- [ ] **Paid-tier Recraft key confirmed** — the API key used for real generation belongs to a paid Recraft account; plan tier is documented in the PR description; no real call is made if tier is unknown (see §5a)
 - [ ] **Explicit user button/action** — generation fires only from a deliberate UI action; no auto-generation on app start, asset switch, or settings change
 - [ ] **Feature flag** — entire generation path gated by a compile-time or runtime flag; disabled by default
 - [ ] **No auto-generation** — confirmed: one user action = one generation request

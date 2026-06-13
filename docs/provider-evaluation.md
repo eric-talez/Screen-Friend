@@ -155,7 +155,7 @@ Concretely:
       one-step bg-removal model is wired) — **(to verify)**.
 - [ ] Current **per-image price** and a worst-case per-character cost (all poses
       × retries) — **(to verify)**.
-- [ ] **Commercial-rights / output-ownership** terms for the chosen model — **(to verify)**.
+- [ ] **Commercial-rights / output-ownership** terms for the chosen model and **exact plan tier** — free tier is not sufficient for Recraft (non-commercial, public, Recraft-owned); a paid-tier key must be confirmed before any real call. Treat pricing/terms as point-in-time and re-verify at integration. **(to verify at implementation time)**.
 - [ ] **Data retention** default and whether API inputs are used for training;
       whether a no-retention / opt-out path exists — **(to verify)**.
 - [ ] **Latency** at the chosen quality tier is acceptable for a foreground UX — **(to verify)**.
@@ -184,7 +184,7 @@ baseline, not from the provisional provider comparison in this doc.
 pins the selected provider/model, confirmed cost estimate, verified source links,
 API key storage plan, and open questions. No real provider integration, real API
 call, personal-photo flow, or production generation path may proceed until the
-relevant open questions and blockers (B1, B3) are resolved. Mock-only scaffolding
+relevant open question blocker (B1) is resolved (B3 resolved 2026-06-13 — see [9f-entry-decision.md §5a](9f-entry-decision.md)). Mock-only scaffolding
 is allowed if feature-flagged, uses no real API key, makes no provider call, and
 preserves `default-css` fallback. (9F-1 mock scaffold was merged in PR #20.)
 
@@ -211,7 +211,15 @@ Slice 9F (first AI generation prototype) **must not start** until **all** of the
 following are decided and recorded:
 
 1. **Selected provider + fallback** — one primary provider/model and one
-   fallback, each with its commercial-rights terms confirmed.
+   fallback, each with its commercial-rights terms confirmed for the **exact plan
+   tier** being used. Free-tier use is blocked for real generation unless the
+   provider's terms explicitly permit private commercial ownership on the free
+   tier (must be cited with source and date). Recraft free-tier specifically is
+   blocked: free-tier images are non-commercial, publicly visible in the community
+   gallery, and owned by Recraft — not the user (verified 2026-06-13,
+   [Recraft commercial rights and ownership](https://www.recraft.ai/docs/plans-and-billing/commercial-rights-and-ownership.md)).
+   A paid Recraft account/key must be confirmed and documented in the PR before
+   any real call is made.
 2. **API-key storage plan** — keys live in the Electron **main process only**,
    never in the renderer/bundle, never logged, never committed; injected at
    runtime; documented.
