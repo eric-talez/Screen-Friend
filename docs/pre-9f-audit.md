@@ -1,8 +1,9 @@
 # Pre-9F Repository Audit — Screen Friend / 화면 친구
 
-> **Status:** Audit report + B2/B5 hardening resolved (pre-9f-hardening-env-and-assets PR). B4 consent/IP-warning scope clarified. 9F-1 mock scaffold merged (PR #20).
+> **Status:** Audit report + B2/B5 hardening resolved (pre-9f-hardening-env-and-assets PR). B4 consent/IP-warning scope clarified. 9F-1 mock scaffold merged (PR #20). **B3 resolved 2026-06-13** — paid-tier Recraft requirement documented and enforced (see §4 and [9f-entry-decision.md §5a](9f-entry-decision.md)).
 > **Audit date:** 2026-06-13.
 > **B2/B5 resolved:** 2026-06-13.
+> **B3 resolved:** 2026-06-13 — paid Recraft tier required for real generation; free-tier risks documented with official source; enforcement checks added to 9F PR requirements.
 > **B4 clarified:** 2026-06-13 — 9F real-provider path requires minimal safety gate; 9G is UX hardening only (see §4).
 > **9F-1 mock scaffold merged:** 2026-06-13 (PR #20) — feature-flagged mock-only generation UI; no real AI, no provider call.
 > **Repo state audited:** `main` @ `5ee3db7` (after PR #17 — 9F entry decision note merged).
@@ -32,10 +33,11 @@ fallback intact. All hardening blockers are resolved: **B2** (`.env` gitignore +
 9F includes minimal gate; 9G is UX hardening). See §4 for details.
 
 **Remaining before any real provider call, personal-photo flow, or production generation
-merge: B1 and B3.** B1 = resolve `9f-entry-decision.md §7` open questions (bg-removal
-format, V4.1 style fit, OpenAI policy HTTP 403). B3 = require paid Recraft tier; document
-free-tier risks. The next step is resolving B1/B3 or preparing a real-provider verification
-plan, not starting mock scaffolding (already done). None are red; all are tracked below.
+merge: B1 only.** B1 = resolve `9f-entry-decision.md §7` open questions (bg-removal
+format, V4.1 style fit, OpenAI policy HTTP 403). **B3 resolved 2026-06-13** — paid-tier
+Recraft requirement is now documented with official source, free-tier risks explained, and
+enforcement checks embedded in the 9F PR requirements (see §4 and
+[9f-entry-decision.md §5a](9f-entry-decision.md)). None are red; all are tracked below.
 
 ### 한국어 요약
 
@@ -46,8 +48,11 @@ plan, not starting mock scaffolding (already done). None are red; all are tracke
 - **9F-1 mock 스캐폴딩이 구현·머지됨(PR #20).** feature-flag, 실제 키/호출 없음,
   default-css 유지. B2/B5/B4 모두 해소.
 - **mock 스캐폴딩 전/병행 hardening 항목(B2 ✅, B5 ✅):** 모두 해소됨.
-- **실제 provider 호출 / 개인 사진 포함 흐름 / 프로덕션 생성 머지 전(B1, B3):**
-  Recraft 유료 티어 강제, 9F 노트의 미검증 항목.
+- **B3 해소(2026-06-13):** Recraft 유료 티어 강제 문서화 완료. 무료 티어 사용 금지
+  (비상업적, 공개 갤러리 노출, Recraft 소유) — 공식 소스 인용. 9F PR 요구사항에 paid-tier
+  확인 체크 추가. 상세: [9f-entry-decision.md §5a](9f-entry-decision.md).
+- **실제 provider 호출 / 개인 사진 포함 흐름 / 프로덕션 생성 머지 전(B1):**
+  9F 노트의 미검증 항목 해소 필요.
 - **B4 해소(2026-06-13):** consent/IP 경고 UI 슬라이스 귀속 명확화 — 9F 실제 provider 경로는
   최소 안전 게이트(IP 경고 + 동의 체크박스 등) 포함 필수; 9G는 UX 심화 레이어.
 - 전체 등급: **🟡 YELLOW** (mock 시작은 green, 실제 API는 조건부). RED 없음.
@@ -61,12 +66,12 @@ plan, not starting mock scaffolding (already done). None are red; all are tracke
 | 1 | Product / roadmap consistency | 🟡 Yellow | Vision is clear and consistent; top-level roadmap docs lag behind sub-slice progress. Consent-UI slice ownership (B4) clarified 2026-06-13. |
 | 2 | Architecture | 🟢 Green | Provider-agnostic engine, clean registry seam, robust settings store, no backend creep. One note: `CharacterAssetId` is a closed compile-time union. |
 | 3 | Electron / security | 🟢 Green | Narrow preload, two scoped IPC channels, no renderer Node access. Pre-9F gap: `.env` is not gitignored. |
-| 4 | 9F readiness | 🟢 9F-1 mock done / 🟡 before real API | 9F-1 mock scaffold merged (PR #20); real provider calls gated by B1/B3. |
+| 4 | 9F readiness | 🟢 9F-1 mock done / 🟡 before real API | 9F-1 mock scaffold merged (PR #20); real provider calls gated by B1 (B3 resolved 2026-06-13). |
 | 5 | QA / test gaps | 🟡 Yellow | typecheck + desktop compile pass; **no unit tests** exist, several Mac behaviors are unverified on hardware, and a CLAUDE.md validation command is wrong. |
 | 6 | Risk register | 🟡 Yellow | Main residual risks are provider/legal (Recraft free-tier trap, retention, per-pose identity) and unverified real-device overlay behavior. |
 
-**Overall: 🟡 Yellow.** 9F-1 mock scaffold merged. B2/B5/B4 resolved/clarified.
-Resolve B1/B3 before any real API call, personal-photo flow, or production generation
+**Overall: 🟡 Yellow.** 9F-1 mock scaffold merged. B2/B5/B4/B3 resolved/clarified.
+Resolve B1 before any real API call, personal-photo flow, or production generation
 merge. No red findings.
 
 ---
@@ -244,7 +249,7 @@ have been outstanding across several slices — they should be cleared before be
 
 | Risk | Category | Impact | Status / mitigation |
 |---|---|---|---|
-| **Recraft free-tier trap** — free tier is **non-commercial**, outputs are **public in the community gallery** and **owned by Recraft** ([`9f-entry-decision.md`](9f-entry-decision.md) §2.2) | Provider / legal / privacy | High | 9F must use a **paid** Recraft tier for any real generation; never run real calls on a free key. Enforce in the key/setup docs before B2/B3 close. |
+| **Recraft free-tier trap** — free tier is **non-commercial**, outputs are **public in the community gallery** and **owned by Recraft** ([`9f-entry-decision.md`](9f-entry-decision.md) §2.2) | Provider / legal / privacy | High | ✅ **B3 resolved (2026-06-13).** Paid-tier requirement documented in [9f-entry-decision.md §5a](9f-entry-decision.md); free-tier blocked with enforcement checklist in 9F PR requirements; plan-tier check added to provider-evaluation.md §6 entry criteria and custom-character-plan.md acceptance criteria. |
 | **API key leakage** — key shipped in renderer/bundle/logs | Security | High | Plan is correct (main-process only). **Add `.env` to `.gitignore` + `.env.example` first** (B2); 9F PR must grep the bundle for the key name. |
 | **IP / copyright copying** — user requests a protected character | Legal | High | Plan §3 style-transform-only normalization + plain-language IP warning before submit. Minimal gate required in 9F; 9G handles polish. (B4 clarified.) |
 | **Real-person likeness without consent** | Legal / ethical | High | Explicit consent checkbox gate before any personal-photo submit — required in 9F real-provider path. (B4 clarified.) |
@@ -280,7 +285,7 @@ calls, personal-photo submission, and any 9F branch intended for production use.
 | ID | Blocker | Why it blocks |
 |---|---|---|
 | **B1** | Resolve [`9f-entry-decision.md`](9f-entry-decision.md) §7 open questions — esp. Q1 (Recraft bg-removal output = transparent PNG?), Q2 (V4.1 style fit, needs a paid account), Q3/Q4 (OpenAI commercial-rights & retention pages returned HTTP 403). | The decision note itself marks these `(to verify)` and forbids real calls / production merge until resolved. |
-| **B3** | Require a **paid** Recraft tier for real generation; document that free-tier output is non-commercial, public, and Recraft-owned. | Using a free key would publish user-derived characters and forfeit ownership — a privacy/legal trap. |
+| ~~**B3**~~ ✅ | ~~Require a **paid** Recraft tier for real generation; document that free-tier output is non-commercial, public, and Recraft-owned.~~ **Resolved 2026-06-13:** paid-tier requirement documented in [`9f-entry-decision.md §5a`](9f-entry-decision.md) with official source ([Recraft commercial rights and ownership](https://www.recraft.ai/docs/plans-and-billing/commercial-rights-and-ownership.md), 2026-06-13). Free-tier risks stated explicitly (non-commercial, public gallery, Recraft-owned). Enforcement checklist added to 9F PR requirements. Plan-tier requirement added to [`provider-evaluation.md §6`](provider-evaluation.md) and [`custom-character-plan.md`](custom-character-plan.md) acceptance criteria. | Using a free key would publish user-derived characters and forfeit ownership — a privacy/legal trap. |
 | ~~**B4**~~ ✅ | ~~Reconcile whether the IP warning + personal-photo consent gate are **9F-merge requirements** (per 9F note §6) or **9G deliverables** (per plan §3/§5, provider-evaluation §6).~~ **Clarified 2026-06-13:** 9F real-provider prototype must include the minimum safety gate — explicit user action, IP warning, personal/reference photo consent checkbox, no auto-generation, visible provider/no-real-copy warning — before any real API call. This is not a full UX polish; 9G is the later hardening layer (better copy, provider error states, retry/cost UI polish, clearer privacy/data-retention display, richer recovery/fallback UX). See updated [`9f-entry-decision.md`](9f-entry-decision.md) §6, [`custom-character-plan.md`](custom-character-plan.md) §3/§5, [`provider-evaluation.md`](provider-evaluation.md) §6 criterion 4. | Prevents 9F scope from silently expanding into full consent UI, or from shipping a real-call path without consent. Prevents 9G from being confused with the first safety gate. |
 
 ---
@@ -339,20 +344,22 @@ isolation grep, network-call grep, `git ls-files` for `.env`, IPC-handler grep.
 > B4 consent/IP-warning scope has been clarified (PR #21). The guidance below is
 > updated to reflect the current state.
 
-**The immediate next step is resolving B1 and B3** before any real provider call,
-personal-photo flow, or production generation merge.
+**B3 resolved (2026-06-13).** The immediate next step is resolving **B1** before any
+real provider call, personal-photo flow, or production generation merge.
 
 Recommended ordering:
 1. **(B1) Verify `9f-entry-decision.md §7` open questions** — confirm Recraft
    bg-removal output format (transparent PNG), empirically test V4.1 style fit on a
    paid tier, and resolve the OpenAI policy HTTP 403 items. Record outcomes in the
    decision note. A small docs-only or minimal test PR is the right vehicle.
-2. **(B3) Document paid-tier Recraft requirement** — record that free-tier Recraft
-   output is non-commercial, public, and Recraft-owned; require a paid key for any
-   real generation; add a guard to the key/setup docs.
-3. **(9F real-provider)** Once B1 + B3 are satisfied and the
+2. ~~**(B3) Document paid-tier Recraft requirement**~~ ✅ **Resolved 2026-06-13** —
+   paid-tier Recraft requirement documented with official source; free-tier blocked;
+   enforcement checks embedded in 9F PR requirements. See
+   [9f-entry-decision.md §5a](9f-entry-decision.md).
+3. **(9F real-provider)** Once B1 is satisfied and the
    [`9f-entry-decision.md`](9f-entry-decision.md) §6 PR checklist is met (including
-   the minimal safety gate — see B4 resolution), implement the real-provider 9F path.
+   the paid-tier check, minimal safety gate — see B3/B4 resolutions), implement
+   the real-provider 9F path.
 
 Keep one task = one slice (CLAUDE.md). Do not combine B1/B3 verification, the
 real-provider 9F implementation, and any UX hardening into a single PR.

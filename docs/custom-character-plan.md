@@ -117,7 +117,7 @@ The behavior engine (`behaviorEngine.ts`, `scheduler.ts`, `position.ts`, `mouse-
 | **9D** ✅ | Settings persistence for selected character asset ID (local asset ID only; no AI/upload) | No | Yes — persistence only |
 | **9E** ✅ | Provider/API evaluation doc — compare OpenAI, Replicate, Fal.ai, Stability/Recraft, Meshy (3D, later); cost, quality, latency, data retention → [provider-evaluation.md](provider-evaluation.md) | No | Docs only |
 | **9F-1** ✅ | **Mock-only generation scaffold** — feature-flagged (`?customGen=1`) UI with IP warning + mock consent gate that, on an explicit click, simulates work locally and registers a placeholder-based runtime sprite asset via `registerCharacterAsset()`. No AI, no upload, no provider, no key, no network. Failure path falls back to `default-css`. | No | Yes — feature-flagged mock UI |
-| **9F** | AI generation prototype behind explicit user action — one provider, one happy path, feature-flagged, with minimal safety gate (IP warning + consent checkbox) before any real API call *(entry decision note: [9f-entry-decision.md](9f-entry-decision.md))*. **Not yet implemented** — gated by audit blockers B1/B3. (B4 clarified 2026-06-13 — see §3.) | Yes | Yes — scoped prototype |
+| **9F** | AI generation prototype behind explicit user action — one provider, one happy path, feature-flagged, with minimal safety gate (IP warning + consent checkbox) before any real API call *(entry decision note: [9f-entry-decision.md](9f-entry-decision.md))*. **Not yet implemented** — gated by audit blocker B1. Real-provider prototype requires a **paid-tier Recraft account** before any real API call (B3 resolved 2026-06-13 — see [9f-entry-decision.md §5a](9f-entry-decision.md)). (B4 clarified 2026-06-13 — see §3.) | Yes | Yes — scoped prototype |
 | **9G** | UX hardening layer — improved copy, provider error state UI, retry/cost UI polish, clearer privacy/data-retention display, richer recovery/fallback UX. **Not the first consent gate** — 9F already includes the minimal safety gate; 9G polishes it. | Yes | Yes — UX hardening |
 
 Each sub-slice is a self-contained, reviewable PR. Do not combine sub-slices.
@@ -136,6 +136,7 @@ These criteria apply across all of Slice 9 and must hold true at every sub-slice
 | Generated assets plug into asset registry | New asset definition satisfies `CharacterAssetDefinition` type; `getCharacterAsset()` returns it |
 | No backend introduced | No Express/Fastify/database in `package.json` |
 | Safety UI present before any generation | Consent checkbox + IP warning visible in generation UI before submit |
+| Paid-tier key confirmed before any real Recraft call | Before any real Recraft API call, confirm key belongs to a paid account; document plan tier in PR description (see [9f-entry-decision.md §5a](9f-entry-decision.md)) |
 
 ---
 
