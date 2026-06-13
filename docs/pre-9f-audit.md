@@ -27,11 +27,12 @@ real provider, no API key, `default-css` fallback intact) — this is explicitly
 authorized by [`9f-entry-decision.md`](9f-entry-decision.md) and carries no
 blockers today.
 
-A handful of items must be cleared **before any real provider call or 9F merge**
-(not before mock scaffolding): the `.env` gitignore gap, the paid-tier Recraft
-requirement, the open verification questions in the 9F decision note, the
-consent/IP-warning slice-ownership ambiguity, and the closed `CharacterAssetId`
-union. None are red; all are tracked below.
+A handful of items should be addressed before or alongside 9F mock scaffolding
+(B2, B5 — hardening), and a separate set must be cleared **before any real
+provider call, personal-photo flow, or production generation merge** (B1, B3, B4):
+the `.env` gitignore gap, the paid-tier Recraft requirement, the open verification
+questions in the 9F decision note, the consent/IP-warning slice-ownership ambiguity,
+and the closed `CharacterAssetId` union. None are red; all are tracked below.
 
 ### 한국어 요약
 
@@ -41,9 +42,10 @@ union. None are red; all are tracked below.
   브리지, IPC 2채널)과 behavior engine의 provider 비의존성은 **GREEN**입니다.
 - **9F mock 스캐폴딩(feature-flag, 실제 키/호출 없음, default-css 유지) 시작은 즉시
   가능**합니다. 현재 시점 블로커 없음.
-- 단, **실제 provider 호출 / 9F 머지 전**에는 몇 가지를 반드시 해결해야 합니다:
-  `.env` gitignore 누락, Recraft 유료 티어 강제, 9F 노트의 미검증 항목, consent/IP
-  경고 UI의 슬라이스 귀속 모호성, 닫힌 `CharacterAssetId` union.
+- **mock 스캐폴딩 전/병행 hardening 항목(B2, B5):** `.env` gitignore 누락,
+  닫힌 `CharacterAssetId` union — mock PR과 함께 해소 권장.
+- **실제 provider 호출 / 개인 사진 포함 흐름 / 프로덕션 생성 머지 전(B1, B3, B4):**
+  Recraft 유료 티어 강제, 9F 노트의 미검증 항목, consent/IP 경고 UI 슬라이스 귀속 모호성.
 - 전체 등급: **🟡 YELLOW** (mock 시작은 green, 실제 API는 조건부). RED 없음.
 
 ---
@@ -59,8 +61,9 @@ union. None are red; all are tracked below.
 | 5 | QA / test gaps | 🟡 Yellow | typecheck + desktop compile pass; **no unit tests** exist, several Mac behaviors are unverified on hardware, and a CLAUDE.md validation command is wrong. |
 | 6 | Risk register | 🟡 Yellow | Main residual risks are provider/legal (Recraft free-tier trap, retention, per-pose identity) and unverified real-device overlay behavior. |
 
-**Overall: 🟡 Yellow.** Begin 9F mock scaffolding now; resolve the §4 blockers
-before any real API call or 9F merge. No red findings.
+**Overall: 🟡 Yellow.** Begin 9F mock scaffolding now; address B2/B5 hardening
+items before/alongside the mock PR; resolve B1/B3/B4 before any real API call,
+personal-photo flow, or production generation merge. No red findings.
 
 ---
 
@@ -190,7 +193,7 @@ before any real API call or 9F merge. No red findings.
   commercial-rights terms with official source links, main-process key plan, a
   10-item 9F PR checklist, and 6 explicit open questions.
 
-**Verified — gated before any real provider call / 9F merge:**
+**Verified — gated before any real provider call / personal-photo flow / production generation merge:**
 - The note's own §7 open questions remain unresolved (bg-removal output format,
   V4.1 style fit requiring a paid account, OpenAI commercial-rights/retention
   pages returning HTTP 403, per-pose identity consistency, latency). These are
@@ -256,14 +259,26 @@ key and preserves `default-css` is authorized by
 [`9f-entry-decision.md`](9f-entry-decision.md) and carries no blockers in the
 current repo state.
 
-### Before any **real provider call / 9F merge**
+### Before / alongside 9F **mock scaffolding** — hardening items
+
+These items do not block the feature-flagged, mock-only scaffold from starting or
+merging, but should be addressed in a small hardening PR before or alongside it.
+
+| ID | Item | Why |
+|---|---|---|
+| **B2** | Add `.env` (and `.env*`) to [`.gitignore`](../.gitignore) and create `.env.example` with the placeholder var name only (`RECRAFT_API_KEY=your_key_here`). | The 9F key plan assumes a gitignored `.env`; today a bare `.env` would be committable. Land before any key handling is introduced — even in a mock slice. |
+| **B5** | Make the asset registry runtime-extensible (widen `CharacterAssetId` / registry shape) for dynamically generated assets. | The current closed union/`Record` cannot hold a generated asset entry without a type change. Safe to land in the mock slice itself. |
+
+### Before any **real provider call / personal-photo flow / production generation merge**
+
+The items below do not block mock-only scaffolding. They gate real Recraft API
+calls, personal-photo submission, and any 9F branch intended for production use.
+
 | ID | Blocker | Why it blocks |
 |---|---|---|
-| **B1** | Resolve [`9f-entry-decision.md`](9f-entry-decision.md) §7 open questions — esp. Q1 (Recraft bg-removal output = transparent PNG?), Q2 (V4.1 style fit, needs a paid account), Q3/Q4 (OpenAI commercial-rights & retention pages returned HTTP 403). | The decision note itself marks these `(to verify)` and forbids real calls / merge until resolved. |
-| **B2** | Add `.env` (and `.env*`) to [`.gitignore`](../.gitignore) and create `.env.example` with the placeholder var name only (`RECRAFT_API_KEY=your_key_here`). | The 9F key plan assumes a gitignored `.env`; today a bare `.env` would be committable. Must precede any key handling. |
+| **B1** | Resolve [`9f-entry-decision.md`](9f-entry-decision.md) §7 open questions — esp. Q1 (Recraft bg-removal output = transparent PNG?), Q2 (V4.1 style fit, needs a paid account), Q3/Q4 (OpenAI commercial-rights & retention pages returned HTTP 403). | The decision note itself marks these `(to verify)` and forbids real calls / production merge until resolved. |
 | **B3** | Require a **paid** Recraft tier for real generation; document that free-tier output is non-commercial, public, and Recraft-owned. | Using a free key would publish user-derived characters and forfeit ownership — a privacy/legal trap. |
 | **B4** | Reconcile whether the IP warning + personal-photo consent gate are **9F-merge requirements** (per 9F note §6) or **9G deliverables** (per plan §3/§5, provider-evaluation §6). | Prevents 9F scope from silently expanding into full consent UI, or from shipping a real-call path without consent. |
-| **B5** | Make the asset registry runtime-extensible (widen `CharacterAssetId` / registry shape) for dynamically generated assets. | The current closed union/`Record` cannot hold a generated asset entry without a type change. |
 
 ---
 
@@ -373,4 +388,4 @@ git status -sb        # only the new untracked file
 ```
 
 No source, Electron, dependency, settings, asset, provider, or other doc files
-were modified. No commit, push, or merge was performed.
+were modified by the audit. This report was later committed in PR #18.
