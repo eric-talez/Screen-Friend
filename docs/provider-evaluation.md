@@ -182,8 +182,11 @@ baseline, not from the provisional provider comparison in this doc.
 
 **Provider decision recorded:** [docs/9f-entry-decision.md](9f-entry-decision.md)
 pins the selected provider/model, confirmed cost estimate, verified source links,
-API key storage plan, and open questions. No 9F code may be written until the
-open questions in that document are resolved.
+API key storage plan, and open questions. No real provider integration, real API
+call, personal-photo flow, or production generation path may proceed until the
+relevant open questions and blockers (B1, B3) are resolved. Mock-only scaffolding
+is allowed if feature-flagged, uses no real API key, makes no provider call, and
+preserves `default-css` fallback. (9F-1 mock scaffold was merged in PR #20.)
 
 ---
 
