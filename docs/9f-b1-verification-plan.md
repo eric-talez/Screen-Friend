@@ -19,6 +19,18 @@ required, and what would let B1 be marked resolved. It does **not** itself verif
 anything, make any API call, or constitute evidence. B1 stays **open** until a
 separate evidence PR (see §6) records the results.
 
+> **First official-doc evidence pass recorded (2026-06-13):** see
+> [§3a Evidence log](#3a-evidence-log--official-doc-pass-2026-06-13). That pass used
+> **official provider docs only** (no API call, no key). It moved **Q4** to Verified
+> (OpenAI no-training-by-default + a concrete 30-day abuse-monitoring retention window +
+> ZDR/Modified-Abuse-Monitoring opt-out, from official OpenAI developer docs), left
+> **Q1** only **partially verified — paid-tier artifact still required**, and left
+> **Q3 Blocked** (official commercial-rights/Terms pages still return HTTP 403).
+> **B1 remains open** as an overall tracker. Gates are path-specific: the **Recraft
+> primary path** (Group A) still needs Q1's paid-tier artifact + Q2 style-fit; the
+> **OpenAI fallback path** (Group B) still needs Q3 commercial-rights evidence; and
+> Q5/Q6 are UX/design validation. None of these are resolved yet.
+
 Scope guardrails for this plan and the follow-up evidence work:
 
 - No key committed; no key in renderer/Vite; no provider call from app code.
@@ -39,18 +51,23 @@ The six questions do **not** all gate the same thing. Keep these separate:
 
 ## 2. B1 Checklist
 
-All rows start at **To verify**. This PR does not change any status.
+Rows reflect the latest recorded evidence. This PR records official-doc evidence only; it does not resolve B1.
 
 | ID | Question | Verification method | Required evidence | Status |
 |---|---|---|---|---|
-| **Q1** | Recraft remove-background output is a transparent **PNG** (not WebP/other) with a clean alpha channel suitable for the overlay | Read official Recraft bg-removal docs for the documented output format; then a paid-tier manual test that runs a simple non-personal image through the bg-removal endpoint and inspects the result | Documented output format from official Recraft docs **+** sample output file format (PNG) **+** alpha-channel evidence (e.g. `file` / image-tool report showing RGBA + transparent pixels), secrets redacted | To verify |
+| **Q1** | Recraft remove-background output is a transparent **PNG** (not WebP/other) with a clean alpha channel suitable for the overlay | Read official Recraft bg-removal docs for the documented output format; then a paid-tier manual test that runs a simple non-personal image through the bg-removal endpoint and inspects the result | Documented output format from official Recraft docs **+** sample output file format (PNG) **+** alpha-channel evidence (e.g. `file` / image-tool report showing RGBA + transparent pixels), secrets redacted | **Partially verified (docs)** — paid-tier artifact still required (2026-06-13, see §3a) |
 | **Q2** | Recraft `recraftv4_1` style fit for a flat, clean companion mascot (paid tier) | Paid-tier manual test generation from a simple text prompt and/or non-personal reference; subjective style-fit judgment against the companion art target | Sample generated image(s) + short written assessment of style fit; note plan tier used | To verify |
-| **Q3** | OpenAI API output **commercial rights** | Re-attempt the **official** OpenAI usage-policy page (returned HTTP 403 on 2026-06-13). Official source only — see §3 | Quote + official source URL + access date confirming commercial use of API outputs; **if the official page stays inaccessible, leave as To verify or mark Blocked** | To verify |
-| **Q4** | OpenAI API **data retention / training opt-out** | Re-attempt the **official** OpenAI API data-usage page (returned HTTP 403 on 2026-06-13). Official source only — see §3 | Quote + official source URL + access date for retention window and training-opt-out; **if the official page stays inaccessible, leave as To verify or mark Blocked** | To verify |
+| **Q3** | OpenAI API output **commercial rights** | Re-attempt the **official** OpenAI usage-policy page (returned HTTP 403 on 2026-06-13). Official source only — see §3 | Quote + official source URL + access date confirming commercial use of API outputs; **if the official page stays inaccessible, leave as To verify or mark Blocked** | **Blocked** — official commercial-rights/Terms pages HTTP 403; accessible OpenAI dev docs do not state output ownership (2026-06-13, see §3a) |
+| **Q4** | OpenAI API **data retention / training opt-out** | Re-attempt the **official** OpenAI API data-usage page (returned HTTP 403 on 2026-06-13). Official source only — see §3 | Quote + official source URL + access date for retention window and training-opt-out; **if the official page stays inaccessible, leave as To verify or mark Blocked** | **Verified** — official OpenAI developer docs (no-training-by-default + 30-day abuse-monitoring retention + ZDR opt-out); canonical openai.com policies page still HTTP 403 (2026-06-13, see §3a) |
 | **Q5** | Per-pose identity / consistency expectations across the 7-pose set | Paid-tier manual test: generate multiple poses and judge whether they read as the same character | Sample multi-pose output + written note on observed consistency. **UX/design finding only — not a policy/legal claim** | To verify |
 | **Q6** | Recraft latency for generation + bg-removal in a foreground user-initiated flow | Paid-tier manual test: time generation and bg-removal calls | Sample wall-clock latency numbers (per-step + total). **UX/design finding only — not a policy/legal claim** | To verify |
 
-Status legend: **To verify** (not yet checked) · **Verified** (evidence recorded, official source where applicable) · **Blocked** (cannot be verified — e.g. official page inaccessible, or no paid key available).
+Status legend: **To verify** (not yet checked) · **Partially verified** (official-doc evidence recorded but a required artifact/element is still missing — not fully resolved) · **Verified** (evidence recorded, official source where applicable) · **Blocked** (cannot be verified — e.g. official page inaccessible, or no paid key available).
+
+> **None of these status changes resolve B1.** Even with Q4 Verified, B1 stays **open**
+> as an overall tracker: the **Recraft primary path** still needs Q1's paid-tier artifact
+> and Q2 style-fit; the **OpenAI fallback path** still needs Q3 commercial-rights
+> evidence; Q5/Q6 are UX/design validation. See §3a and §6.
 
 ---
 
@@ -71,6 +88,61 @@ These are doc-only and require no key.
 
 Recording: capture the exact quote, the official URL, and the access date for any
 item moved toward **Verified**.
+
+---
+
+## 3a. Evidence log — official-doc pass (2026-06-13)
+
+> **First B1 evidence pass — official provider documentation only.** No API call, no
+> API key, no SDK, no app code. Access method: `curl -L -I` / `curl -L` from this
+> environment, plus a browser-style `User-Agent` retry for the OpenAI `openai.com`
+> pages. **Official sources only** — no mirrors, caches, archives, blogs, or
+> third-party summaries were used for any status change. All results are
+> **point-in-time (2026-06-13)** and must be re-checked at integration.
+
+### Q1 — Recraft remove-background output format / alpha
+
+| Field | Value |
+|---|---|
+| Date | 2026-06-13 |
+| Source (official) | `https://www.recraft.ai/docs/api-reference/getting-started.md` · `https://www.recraft.ai/docs/api-reference/endpoints.md` |
+| Access result | HTTP **200** (both; `text/markdown`) |
+| Summary | getting-started: *"Remove background — produce a transparent-background cutout of the subject."* endpoints (`POST /v1/images/removeBackground`): *"Removes background of a given raster image."* Documented parameter for this endpoint is **only** `response_format` (`url` \| `b64_json`). The endpoint section documents **no output `image_format`** and **no explicit PNG / alpha-channel guarantee** for the remove-background result (other Recraft endpoints, e.g. variateImage, do document an `image_format: png\|webp`; remove-background does not). |
+| Status impact | **Q1 → Partially verified (docs).** The transparency *claim* is in the official docs, but the actual output **file format (PNG vs WebP)** and a **clean alpha channel** are **not** documented for this endpoint. **Not fully resolved** — a paid-tier artifact (RGBA + real transparent pixels, see §4) is still required. |
+
+### Q3 — OpenAI API output commercial rights / ownership
+
+| Field | Value |
+|---|---|
+| Date | 2026-06-13 |
+| Source attempted (official) | `https://openai.com/policies/usage-policies` · `https://openai.com/policies/terms-of-use` · `https://openai.com/policies/business-terms` · `https://openai.com/policies/services-agreement` · `https://openai.com/enterprise-privacy/` · `https://openai.com/policies/data-processing-addendum/` |
+| Access result | HTTP **403** on **all** of the above — both bare `curl` and a browser-style `User-Agent` retry (bot protection). Note: this is a local-fetch limitation; the pages may be reachable in a real browser — **not recorded as globally inaccessible.** |
+| Cross-check (official, accessible) | `https://developers.openai.com/api/docs/guides/your-data` (HTTP 200) — this is a **data-usage** guide and does **not** state output **ownership** or **commercial-use** rights. |
+| Summary | The canonical OpenAI sources for output ownership / commercial rights (Usage Policies, Terms of Use, Business/Services Agreement, Enterprise privacy, DPA) were **not retrievable** from this environment (403). The one accessible official OpenAI page does not address output ownership. |
+| Status impact | **Q3 → Blocked.** No accessible official source supports the commercial-rights/output-ownership claim, so Q3 cannot reach even *partially verified*. Per the verification rules, **not Verified.** Re-attempt the Terms/Business/Services pages in a real browser and quote the exact ownership clause before any OpenAI-fallback real use. |
+
+### Q4 — OpenAI API data retention / training opt-out
+
+| Field | Value |
+|---|---|
+| Date | 2026-06-13 |
+| Source attempted (canonical) | `https://openai.com/policies/api-data-usage-policies` → HTTP **403** (bare `curl` and browser-style `User-Agent`). **Local-fetch limitation, not global inaccessibility.** |
+| Source verified (official, accessible) | `https://developers.openai.com/api/docs/guides/your-data` (HTTP **200**; mirrored at `https://platform.openai.com/docs/guides/your-data`, HTTP 200) |
+| Summary (exact quotes) | (1) *"As of March 1, 2023, data sent to the OpenAI API is not used to train or improve OpenAI models (unless you explicitly opt in to share data with us)."* → **no-training-by-default.** (2) *"By default, abuse monitoring logs are generated for all API feature usage and retained for up to 30 days, unless longer retention is required by law, or is reasonably necessary to protect our services or any third party from harm."* → **concrete default retention window.** (3) Eligible customers can enable **Zero Data Retention** or **Modified Abuse Monitoring** to exclude customer content from abuse-monitoring logs → **opt-out path.** |
+| Status impact | **Q4 → Verified** (official OpenAI developer docs). Both required elements are clear: training/default-use (not used to train by default) **and** a concrete retention rule (abuse-monitoring logs ≤ 30 days by default) **plus** an opt-out path (ZDR / Modified Abuse Monitoring). Note: retention specifics vary by endpoint (e.g. some objects retained 30 days after deletion; videos 48h+30d), and the canonical `openai.com/policies` page was 403 — verification rests on the official developer-docs source. |
+
+### Net effect on B1
+
+- **Q1:** Partially verified (docs) — **artifact still required.** Not resolved.
+- **Q2, Q5, Q6:** unchanged — still **To verify** (paid Recraft test, §4).
+- **Q3:** **Blocked** — official commercial-rights source inaccessible (403).
+- **Q4:** **Verified** — official OpenAI developer docs.
+
+**B1 remains OPEN after this pass.** Resolving Q4 alone does not unblock the Recraft
+primary path — that still needs Q1's paid-tier artifact (Group A) and Q2 style-fit.
+The OpenAI fallback path (Group B) still needs Q3 commercial-rights evidence.
+Q5/Q6 are UX/design validation (Group C). No real provider call, personal-photo flow,
+or production generation merge may proceed.
 
 ---
 

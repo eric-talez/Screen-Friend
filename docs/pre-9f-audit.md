@@ -253,7 +253,7 @@ have been outstanding across several slices — they should be cleared before be
 | **API key leakage** — key shipped in renderer/bundle/logs | Security | High | Plan is correct (main-process only). **Add `.env` to `.gitignore` + `.env.example` first** (B2); 9F PR must grep the bundle for the key name. |
 | **IP / copyright copying** — user requests a protected character | Legal | High | Plan §3 style-transform-only normalization + plain-language IP warning before submit. Minimal gate required in 9F; 9G handles polish. (B4 clarified.) |
 | **Real-person likeness without consent** | Legal / ethical | High | Explicit consent checkbox gate before any personal-photo submit — required in 9F real-provider path. (B4 clarified.) |
-| **Provider data retention** — sensitive input stored/trained on | Privacy | High | Recraft API inputs documented as never used for training (note §2.2, official). OpenAI retention/commercial pages returned **403** and remain **(to verify)** before any OpenAI-path real use. |
+| **Provider data retention** — sensitive input stored/trained on | Privacy | High | Recraft API inputs documented as never used for training (note §2.2, official). OpenAI **retention/training-opt-out verified 2026-06-13** via official dev docs (no-training-by-default + ≤30-day abuse-monitoring window + ZDR opt-out; see [9f-b1-verification-plan.md §3a](9f-b1-verification-plan.md)); OpenAI **commercial-rights** pages still returned **403** and remain **(to verify / Blocked)** before any OpenAI-path real use. |
 | **Per-pose identity drift** — 7 separate generations don't read as the same character | Quality / UX | Medium | Note §7 Q5 — unverified empirically; set user expectations ("stylize, not clone"), allow per-pose regenerate, cap retries. |
 | **Cost runaway** — retries/loops burn spend | Cost | Medium | Note §3 — hard retry cap ≤ 2/pose and per-character cost cap **enforced in the IPC handler before any call** (not policy-only). |
 | **Closed `CharacterAssetId` union** — cannot hold a generated asset | Architecture | Medium | Widen the ID type / make the registry runtime-extensible in 9F (B5). Runtime fallback already safe. |
@@ -355,6 +355,10 @@ Recommended ordering:
    [`9f-b1-verification-plan.md`](9f-b1-verification-plan.md) (a plan, not proof —
    B1 remains open until a separate evidence PR records results). Record outcomes in
    the decision note. A small docs-only or minimal test PR is the right vehicle.
+   **First official-doc evidence pass recorded 2026-06-13** ([`9f-b1-verification-plan.md` §3a](9f-b1-verification-plan.md#3a-evidence-log--official-doc-pass-2026-06-13)):
+   Q4 → Verified (official OpenAI dev docs), Q1 → partially verified (paid-tier artifact
+   still required), Q3 → Blocked (official commercial-rights pages still HTTP 403);
+   Q2/Q5/Q6 still need a paid Recraft test. **B1 remains open.**
 2. ~~**(B3) Document paid-tier Recraft requirement**~~ ✅ **Resolved 2026-06-13** —
    paid-tier Recraft requirement documented with official source; free-tier blocked;
    enforcement checks embedded in 9F PR requirements. See
