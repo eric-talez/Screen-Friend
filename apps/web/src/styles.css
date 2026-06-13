@@ -745,6 +745,46 @@ h3 {
   outline-offset: 2px;
 }
 
+/* Slice 9F-1: mock-only generation scaffold (feature-flagged via ?customGen=1). */
+.mock-gen-panel {
+  margin: 16px 0 0;
+  padding: 16px 18px;
+  border: 1px dashed var(--line);
+  border-radius: 16px;
+  background: var(--panel);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.mock-gen-panel h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.mock-gen-warning {
+  margin: 0;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--accent-strong);
+}
+
+.mock-gen-note {
+  margin: 0;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.mock-gen-consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 0.8rem;
+  color: var(--fg);
+  cursor: pointer;
+}
+
 .character-stage {
   position: relative;
   height: 240px;

@@ -1,6 +1,7 @@
 import { type ChangeEvent, useEffect, useRef, useState } from "react";
 import CharacterStage from "./components/CharacterStage";
 import SceneViewer from "./components/SceneViewer";
+import MockGenerationPanel from "./components/MockGenerationPanel";
 import { listCharacterAssets } from "./character/characterAssets";
 
 // Slice 3: the Electron shell loads the same app with ?mode=overlay to get a
@@ -27,6 +28,9 @@ const isInteractive = overlayParams.get("interactive") === "1";
 // values fall back to "default-css" via getCharacterAsset().
 const assetIdFromUrl = overlayParams.get("asset");
 const assetIdParam = assetIdFromUrl ?? "default-css";
+// Slice 9F-1: ?customGen=1 reveals the mock-only generation scaffold. Off by
+// default — no AI, no upload, no provider call; registers a local runtime asset.
+const isCustomGenEnabled = overlayParams.get("customGen") === "1";
 
 if (isOverlayMode) {
   document.documentElement.classList.add("overlay-mode");
@@ -91,12 +95,19 @@ function App() {
     }
   }, []);
 
+  // Slice 9F-1: runtime mock asset IDs are renderer-local and must never be
+  // persisted to desktop settings (a restart has no such asset registered, so it
+  // would fall back to default-css). Prefix matches MockGenerationPanel's IDs.
+  const isRuntimeMockAssetId = (id: string) => id.startsWith("mock-generated-");
+
   const handleAssetChange = (id: string) => {
     setSelectedAssetId(id);
     const url = new URL(window.location.href);
     url.searchParams.set("asset", id);
     window.history.replaceState(null, "", url.toString());
-    void window.screenFriend?.setSelectedCharacterId?.(id);
+    if (!isRuntimeMockAssetId(id)) {
+      void window.screenFriend?.setSelectedCharacterId?.(id);
+    }
   };
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -299,6 +310,7 @@ function App() {
             </label>
           ))}
         </div>
+        {isCustomGenEnabled && <MockGenerationPanel onGenerated={setSelectedAssetId} />}
         <CharacterStage assetId={selectedAssetId} />
       </section>
 
