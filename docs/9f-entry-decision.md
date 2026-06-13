@@ -7,7 +7,10 @@
 This document satisfies the provider decision gate defined in
 [provider-evaluation.md §4](provider-evaluation.md#provider-decision-gate-for-9f-must-record-before-coding-starts)
 and the entry criteria in [provider-evaluation.md §6](provider-evaluation.md#6-slice-9f-entry-criteria).
-No 9F implementation may begin until the open questions in §7 are resolved.
+No 9F provider call, personal-photo flow, or production merge may proceed until
+the relevant open questions in §7 are resolved. Code scaffolding and mock-only
+prototyping may begin if it remains feature-flagged, uses no real API key, and
+preserves `default-css` fallback.
 
 ---
 
