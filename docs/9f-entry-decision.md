@@ -62,8 +62,8 @@ and official/third-party classification.
 | `gpt-image-1.5`, `gpt-image-1-mini` | Shutdown **2026-12-01** | [OpenAI deprecations page](https://developers.openai.com/api/docs/deprecations) | Official | 2026-06-13 |
 | `dall-e-2`, `dall-e-3` | Already removed (May 2026) | [OpenAI deprecations page](https://developers.openai.com/api/docs/deprecations) | Official | 2026-06-13 |
 | `gpt-image-2` price (medium, 1024×1024) | $0.053/image | [OpenAI image generation guide](https://developers.openai.com/api/docs/guides/image-generation) | Official | 2026-06-13 |
-| Commercial rights for API outputs | **(to verify)** — policy pages returned HTTP 403 | https://openai.com/policies/usage-policies | Official URL inaccessible | 2026-06-13 |
-| Data retention / training opt-out | **(to verify)** — policy pages returned HTTP 403 | https://openai.com/policies/api-data-usage-policies | Official URL inaccessible | 2026-06-13 |
+| Commercial rights for API outputs | **(to verify — Blocked)** — Usage Policies, Terms of Use, Business/Services Agreement, Enterprise privacy, DPA all returned HTTP 403 (incl. browser-style UA); accessible OpenAI dev docs do not state output ownership | https://openai.com/policies/usage-policies (+ terms-of-use, business-terms, services-agreement) | Official URL inaccessible (403) | 2026-06-13 |
+| Data retention / training opt-out | **Verified** — "data sent to the OpenAI API is not used to train or improve OpenAI models (unless you explicitly opt in)"; abuse-monitoring logs retained **up to 30 days** by default; **Zero Data Retention / Modified Abuse Monitoring** opt-out available. (Canonical `openai.com/policies/api-data-usage-policies` still 403; verified via official developer docs.) | https://developers.openai.com/api/docs/guides/your-data (mirror: https://platform.openai.com/docs/guides/your-data) | Official | 2026-06-13 |
 
 ### 2.2 Recraft
 
@@ -242,11 +242,18 @@ but they block any real API call with personal photos or production use.
 > records the results. Q1/Q2 gate the Recraft primary path; Q3/Q4 gate only the
 > OpenAI fallback / personal-photo OpenAI path; Q5/Q6 are UX/design validation.
 
+> **Official-doc evidence pass recorded (2026-06-13):** see
+> [`9f-b1-verification-plan.md` §3a](9f-b1-verification-plan.md#3a-evidence-log--official-doc-pass-2026-06-13).
+> It moved **Q4 → Verified** (official OpenAI developer docs), left **Q1** only
+> partially verified (paid-tier artifact still required), and left **Q3 Blocked**
+> (official commercial-rights/Terms pages still 403). **B1 is not resolved** — it
+> remains open pending Q1's artifact, Q2/Q5/Q6, and Q3.
+
 | # | Item | Blocker for |
 |---|---|---|
-| 1 | **Recraft remove-background output format** — confirm it produces transparent PNG (not WebP or other format) and that the alpha channel is clean enough for the overlay | 9F merge |
+| 1 | **Recraft remove-background output format** — confirm it produces transparent PNG (not WebP or other format) and that the alpha channel is clean enough for the overlay. **Partially verified 2026-06-13:** official docs confirm a "transparent-background cutout" claim, but no output file-format/alpha is documented for the endpoint — paid-tier artifact still required (see §3a). | 9F merge |
 | 2 | **Recraft V4.1 style fit** — empirical test generation needed (requires a paid-tier account and API key) | 9F merge |
-| 3 | **OpenAI commercial rights for API outputs** — policy pages returned HTTP 403 on 2026-06-13; must verify before using OpenAI as fallback in production | Production / OpenAI fallback |
-| 4 | **OpenAI data retention window and training opt-out** — same HTTP 403 issue; must verify before any personal-photo flow uses the OpenAI path | Production / OpenAI fallback |
+| 3 | **OpenAI commercial rights for API outputs** — **Blocked 2026-06-13:** Usage Policies / Terms / Business / Services / Enterprise-privacy pages still return HTTP 403 (incl. browser-style UA); accessible dev docs do not cover output ownership. Must verify before using OpenAI as fallback in production (see §3a). | Production / OpenAI fallback |
+| 4 | **OpenAI data retention window and training opt-out** — **Verified 2026-06-13** via official OpenAI developer docs: not used to train by default; abuse-monitoring logs ≤ 30 days by default; ZDR / Modified Abuse Monitoring opt-out (see §3a). | Production / OpenAI fallback |
 | 5 | **Per-pose identity / consistency** — neither provider guarantees the same character across 7 separate generation calls; empirical testing needed to set realistic user expectations | 9F UX design |
 | 6 | **Recraft latency at generation + bg-removal** — acceptable for a foreground user-initiated flow; not verified empirically | 9F UX design |
