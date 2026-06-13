@@ -180,6 +180,11 @@ note (a dedicated section in the 9F PR description is sufficient):
 This gate exists so that all 9F contributors start from the same verified
 baseline, not from the provisional provider comparison in this doc.
 
+**Provider decision recorded:** [docs/9f-entry-decision.md](9f-entry-decision.md)
+pins the selected provider/model, confirmed cost estimate, verified source links,
+API key storage plan, and open questions. No 9F code may be written until the
+open questions in that document are resolved.
+
 ---
 
 ## 5. Risk register
