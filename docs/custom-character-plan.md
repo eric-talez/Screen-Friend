@@ -147,4 +147,5 @@ These criteria apply across all of Slice 9 and must hold true at every sub-slice
 - `apps/desktop/src/settings.ts` — Electron settings schema (`ScreenFriendSettings`)
 - `apps/desktop/src/renderer/` — Electron renderer
 - `docs/provider-evaluation.md` — Slice 9E provider/API evaluation and 9F entry criteria
+- `docs/monetization-v1.md` — future monetization model (base app price + custom character credits); product strategy only, no payment code
 - `docs/roadmap.html` — full roadmap context
