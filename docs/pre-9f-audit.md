@@ -361,7 +361,7 @@ Recommended ordering:
    the paid-tier check, minimal safety gate — see B3/B4 resolutions), implement
    the real-provider 9F path.
 
-Keep one task = one slice (CLAUDE.md). Do not combine B1/B3 verification, the
+Keep one task = one slice (CLAUDE.md). Do not combine B1 verification, the
 real-provider 9F implementation, and any UX hardening into a single PR.
 
 ---
