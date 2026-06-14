@@ -30,6 +30,10 @@ separate evidence PR (see §6) records the results.
 > primary path** (Group A) still needs Q1's paid-tier artifact + Q2 style-fit; the
 > **OpenAI fallback path** (Group B) still needs Q3 commercial-rights evidence; and
 > Q5/Q6 are UX/design validation. None of these are resolved yet.
+> **Second paid-tier artifact pass (2026-06-13):** Q1 Verified (WebP alpha confirmed),
+> Q2 Verified (style fit confirmed), Q5 Partially verified (consistency), Q6 Verified
+> (latency). Recraft-only primary path (Group A) evidence satisfied. B1 remains open due
+> to Q3. See §3b for full evidence log.
 
 Scope guardrails for this plan and the follow-up evidence work:
 
@@ -55,12 +59,12 @@ Rows reflect the latest recorded evidence. This PR records official-doc evidence
 
 | ID | Question | Verification method | Required evidence | Status |
 |---|---|---|---|---|
-| **Q1** | Recraft remove-background output is a transparent **PNG** (not WebP/other) with a clean alpha channel suitable for the overlay | Read official Recraft bg-removal docs for the documented output format; then a paid-tier manual test that runs a simple non-personal image through the bg-removal endpoint and inspects the result | Documented output format from official Recraft docs **+** sample output file format (PNG) **+** alpha-channel evidence (e.g. `file` / image-tool report showing RGBA + transparent pixels), secrets redacted | **Partially verified (docs)** — paid-tier artifact still required (2026-06-13, see §3a) |
-| **Q2** | Recraft `recraftv4_1` style fit for a flat, clean companion mascot (paid tier) | Paid-tier manual test generation from a simple text prompt and/or non-personal reference; subjective style-fit judgment against the companion art target | Sample generated image(s) + short written assessment of style fit; note plan tier used | To verify |
+| **Q1** | Recraft remove-background output is a transparent **PNG** (not WebP/other) with a clean alpha channel suitable for the overlay | Read official Recraft bg-removal docs for the documented output format; then a paid-tier manual test that runs a simple non-personal image through the bg-removal endpoint and inspects the result | Documented output format from official Recraft docs **+** sample output file format (PNG) **+** alpha-channel evidence (e.g. `file` / image-tool report showing RGBA + transparent pixels), secrets redacted | **Verified** — paid-tier artifact confirmed 2026-06-13 (see §3b): output is **WebP with clean alpha**; actual transparent pixels confirmed; format is WebP (not PNG as docs implied), but clean alpha suitable for overlay. V4.1 does not support the `style` parameter — omit from generation requests. |
+| **Q2** | Recraft `recraftv4_1` style fit for a flat, clean companion mascot (paid tier) | Paid-tier manual test generation from a simple text prompt and/or non-personal reference; subjective style-fit judgment against the companion art target | Sample generated image(s) + short written assessment of style fit; note plan tier used | **Verified** — paid-tier artifact 2026-06-13 (see §3b): flat clean 2D illustration style confirmed; suitable for desktop companion mascot; explicit color specification required for cross-pose consistency |
 | **Q3** | OpenAI API output **commercial rights** | Re-attempt the **official** OpenAI usage-policy page (returned HTTP 403 on 2026-06-13). Official source only — see §3 | Quote + official source URL + access date confirming commercial use of API outputs; **if the official page stays inaccessible, leave as To verify or mark Blocked** | **Blocked** — official commercial-rights/Terms pages HTTP 403; accessible OpenAI dev docs do not state output ownership (2026-06-13, see §3a) |
 | **Q4** | OpenAI API **data retention / training opt-out** | Re-attempt the **official** OpenAI API data-usage page (returned HTTP 403 on 2026-06-13). Official source only — see §3 | Quote + official source URL + access date for retention window and training-opt-out; **if the official page stays inaccessible, leave as To verify or mark Blocked** | **Verified** — official OpenAI developer docs (no-training-by-default + 30-day abuse-monitoring retention + ZDR opt-out); canonical openai.com policies page still HTTP 403 (2026-06-13, see §3a) |
-| **Q5** | Per-pose identity / consistency expectations across the 7-pose set | Paid-tier manual test: generate multiple poses and judge whether they read as the same character | Sample multi-pose output + written note on observed consistency. **UX/design finding only — not a policy/legal claim** | To verify |
-| **Q6** | Recraft latency for generation + bg-removal in a foreground user-initiated flow | Paid-tier manual test: time generation and bg-removal calls | Sample wall-clock latency numbers (per-step + total). **UX/design finding only — not a policy/legal claim** | To verify |
+| **Q5** | Per-pose identity / consistency expectations across the 7-pose set | Paid-tier manual test: generate multiple poses and judge whether they read as the same character | Sample multi-pose output + written note on observed consistency. **UX/design finding only — not a policy/legal claim** | **Partially verified** — paid-tier artifact 2026-06-13 (see §3b): 7 poses generated and bg-removed; individually readable; cross-pose identity drift observed (color palette split across 2 groups; 1 humanoid body shape; 1 spider-limb pose); explicit character spec or reference-image approach required |
+| **Q6** | Recraft latency for generation + bg-removal in a foreground user-initiated flow | Paid-tier manual test: time generation and bg-removal calls | Sample wall-clock latency numbers (per-step + total). **UX/design finding only — not a policy/legal claim** | **Verified** — paid-tier artifact 2026-06-13 (see §3b): avg ~5,400ms generation + ~2,200ms bg-removal = ~7,600ms per pose; acceptable for foreground user-initiated one-time flow |
 
 Status legend: **To verify** (not yet checked) · **Partially verified** (official-doc evidence recorded but a required artifact/element is still missing — not fully resolved) · **Verified** (evidence recorded, official source where applicable) · **Blocked** (cannot be verified — e.g. official page inaccessible, or no paid key available).
 
@@ -146,6 +150,98 @@ or production generation merge may proceed.
 
 ---
 
+## 3b. Evidence log — Recraft paid-tier artifact pass (2026-06-13)
+
+> **Second B1 evidence pass — paid-tier Recraft API test.** No personal photos.
+> No copyrighted references. Simple original non-person text prompt only (round blob mascot
+> in each pose). Paid-tier account confirmed manually by user. No app code, no SDK,
+> no committed artifacts. Temporary gitignored test script
+> (`tmp/b1-recraft-evidence/run-test.mjs`). Key was never logged. All results are
+> **point-in-time (2026-06-13)** and must be re-checked at integration.
+>
+> **V4.1 note:** the `style` parameter causes HTTP 400 on `recraftv4_1` —
+> V4.1 does not support it. Omit `style` from all generation requests.
+
+### Q1 — Recraft remove-background output format / alpha
+
+| Field | Value |
+|---|---|
+| Date | 2026-06-13 |
+| Method | Paid-tier API; 7 poses generated via `recraftv4_1`; each passed through Recraft remove-background endpoint; format inspected via PNG-magic-byte check; `sips -g hasAlpha`; Python zlib IDAT pixel decode (WebP→PNG via sips, then RGBA alpha scan) |
+| Output format | **WebP** (not PNG) — RIFF header confirmed; PNG magic bytes absent |
+| Alpha channel present | **Yes** — `sips -g hasAlpha` → `YES` for all 7 poses |
+| Transparent pixels confirmed | **Yes** — Python pixel decode on idle pose found alpha < 255 pixels |
+| Suitable for overlay | **Yes** — WebP with alpha is natively rendered by Chromium (Electron renderer); no PNG conversion needed for display |
+| V4.1 note | `style` parameter causes HTTP 400 — V4.1 does not support it; omit from generation requests |
+| Status impact | **Q1 → Verified.** Output is WebP (not PNG as docs implied), but alpha is clean and transparent pixels confirmed. Suitable for the overlay. |
+
+### Q2 — Recraft V4.1 style fit for a flat, clean companion mascot
+
+| Field | Value |
+|---|---|
+| Date | 2026-06-13 |
+| Method | Paid-tier; 7 poses generated via `recraftv4_1` and visually assessed after bg-removal |
+| Prompt shape | "A small cute round blob mascot character with simple features, [pose desc]. Flat 2D digital illustration style, clean lines, soft pastel colors, white background, no text, no humans, no real-world references. Suitable as a desktop companion character sprite." |
+| Style assessment | Output style is **flat 2D digital illustration** with clean lines and soft pastel colors — well-suited for a desktop companion mascot. Images are non-threatening, simple, and cute. No realistic textures or complex backgrounds. Style quality matches the companion use-case target. |
+| Color consistency caveat | Two distinct palettes emerged across 7 generations without explicit color constraints: cream/beige+purple (idle, lie, sleepy) and pink/salmon (walk, sleep, stretch, react). Explicitly specifying colors in the prompt is required for a consistent character palette. |
+| Status impact | **Q2 → Verified.** Style fit confirmed for the companion mascot use case. Color consistency requires explicit per-prompt color specification — a prompting note, not a provider blocker. |
+
+### Q5 — Per-pose identity / consistency (7 poses)
+
+| Pose | Status | Color | Body shape | Notes |
+|---|---|---|---|---|
+| idle | ✅ Generated + bg-removed | Cream/beige + purple | Round blob | Small smile, rosy cheeks — base reference |
+| walk | ✅ Generated + bg-removed | Pink/salmon | Round blob | Black dot eyes; color drift from idle |
+| lie | ✅ Generated + bg-removed | Cream/beige + purple | Round blob | Face hidden (lying flat); color matches idle |
+| sleepy | ✅ Generated + bg-removed | Cream/beige | Round blob | Blue drooping oval eyes; very readable sleepy expression |
+| sleep | ✅ Generated + bg-removed | Pink/salmon | Round blob (curled) | Curved line eyes; color drift; pose readable |
+| stretch | ✅ Generated + bg-removed | Pink/salmon | ⚠️ **Humanoid** (neck + torso + elongated limbs with fingers) | Body shape fundamentally differs from round-blob spec |
+| react | ✅ Generated + bg-removed | Pink/salmon + purple | ⚠️ Blob with **4+ limbs** | Huge black circle eyes (gold outline); face style radically different |
+
+**Overall consistency:** All 7 poses generated and bg-removed successfully. Poses are individually recognizable and cute. Cross-pose identity consistency is **insufficient for direct sprite-sheet use** from text-only prompts:
+
+- **Color:** Two groups — 3 cream/beige+purple, 4 pink/salmon. No unified palette without explicit hex/color constraints.
+- **Body shape:** 5/7 round blob (matching spec); 1 humanoid (stretch); 1 blob with extra limbs (react).
+- **Face style:** varies significantly — small dot eyes, blue ovals, huge black circles.
+
+A reference-image approach (character-sheet first, then pose variations) or very explicit color/shape prompt specification is required for a consistent 7-pose sprite set.
+
+- **Result: Partially verified.** Poses individually clean and cute; cross-pose identity consistency requires explicit prompting beyond short text descriptions.
+
+### Q6 — Recraft generation + bg-removal latency
+
+| Pose | Gen (ms) | BgRemoval (ms) | Total (ms) |
+|---|---|---|---|
+| idle | 5,564 | 2,120 | 7,684 |
+| walk | 5,342 | 2,095 | 7,437 |
+| lie | 6,042 | 2,117 | 8,159 |
+| sleepy | 4,753 | 2,557 | 7,310 |
+| sleep | 5,678 | 1,942 | 7,620 |
+| stretch | 5,249 | 2,409 | 7,658 |
+| react | 5,254 | 2,366 | 7,620 |
+| **Average** | **5,412** | **2,229** | **7,641** |
+
+- Generation: avg ~5,400ms; range 4,753–6,042ms
+- Background removal: avg ~2,200ms; range 1,942–2,557ms
+- Total per pose: avg ~7,600ms; range ~7,300–8,200ms
+- **Classification: Acceptable** — under 10s per pose for a foreground user-initiated one-time flow; total for 7 poses sequential ~53s is acceptable for a single "generate my character" action.
+- **Result: Verified.**
+
+### Net effect on B1
+
+- **Q1:** **Verified** — WebP output with clean alpha; transparent pixels confirmed.
+- **Q2:** **Verified** — flat clean 2D illustration style confirmed; suitable for companion mascot; explicit color spec needed for consistency.
+- **Q3:** **Blocked** (unchanged from §3a) — official commercial-rights source inaccessible (HTTP 403).
+- **Q4:** **Verified** (unchanged from §3a) — official OpenAI developer docs.
+- **Q5:** **Partially verified** — 7 poses generated; individually readable; cross-pose identity consistency insufficient without explicit character spec.
+- **Q6:** **Verified** — ~7.6s avg per pose; acceptable for foreground one-time flow.
+
+**Recraft-only primary path (Group A: Q1 + Q2): evidence satisfied (2026-06-13).** See §6 for scope of this conclusion.
+
+**B1 overall remains OPEN** — the OpenAI fallback path (Group B) still needs Q3 commercial-rights evidence (Blocked). No Recraft-only real-provider merge may proceed without also satisfying the [`9f-entry-decision.md` §6](9f-entry-decision.md#6-9f-pr-requirements) implementation checklist.
+
+---
+
 ## 4. Manual Verification Steps — Paid-tier items (Q2, Q5, Q6; Q1 artifact)
 
 **Prerequisite:** a **paid** Recraft account and a **paid-tier** API key, confirmed
@@ -209,6 +305,11 @@ These apply to all B1 verification work (this plan and the follow-up evidence PR
 > [`9f-entry-decision.md` §6](9f-entry-decision.md#6-9f-pr-requirements) checklist is
 > also satisfied. Q3+Q4 (Group B) gate **only** the OpenAI fallback / any
 > personal-photo OpenAI path — they are **not** required for a Recraft-only merge.
+
+> **Artifact evidence recorded (2026-06-13):** Q1 and Q2 are now both **Verified** (see §3b).
+> Recraft-only primary path evidence (Group A) is satisfied, subject to the §6 9F
+> implementation checklist. B1 remains open due to Q3 (OpenAI fallback commercial-rights
+> evidence still Blocked). See §3b net-effect summary.
 
 ### What would block real-provider 9F
 

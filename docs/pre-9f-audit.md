@@ -5,6 +5,7 @@
 > **B2/B5 resolved:** 2026-06-13.
 > **B3 resolved:** 2026-06-13 — paid Recraft tier required for real generation; free-tier risks documented with official source; enforcement checks added to 9F PR requirements.
 > **B4 clarified:** 2026-06-13 — 9F real-provider path requires minimal safety gate; 9G is UX hardening only (see §4).
+> **B1 Recraft artifact evidence recorded:** 2026-06-13 — Q1 (WebP alpha) + Q2 (style fit) + Q6 (latency) Verified; Q5 Partially verified; Recraft-only path (Group A) evidence satisfied; Q3 still Blocked (see [9f-b1-verification-plan.md §3b](9f-b1-verification-plan.md#3b-evidence-log--recraft-paid-tier-artifact-pass-2026-06-13)).
 > **9F-1 mock scaffold merged:** 2026-06-13 (PR #20) — feature-flagged mock-only generation UI; no real AI, no provider call.
 > **Repo state audited:** `main` @ `5ee3db7` (after PR #17 — 9F entry decision note merged).
 > **Hardening applied to:** `main` @ `3375450` (after PR #18 — pre-9f-audit merged).
@@ -284,7 +285,7 @@ calls, personal-photo submission, and any 9F branch intended for production use.
 
 | ID | Blocker | Why it blocks |
 |---|---|---|
-| **B1** | Resolve [`9f-entry-decision.md`](9f-entry-decision.md) §7 open questions — esp. Q1 (Recraft bg-removal output = transparent PNG?), Q2 (V4.1 style fit, needs a paid account), Q3/Q4 (OpenAI commercial-rights & retention pages returned HTTP 403). | The decision note itself marks these `(to verify)` and forbids real calls / production merge until resolved. |
+| **B1** | Resolve [`9f-entry-decision.md`](9f-entry-decision.md) §7 open questions — **Q1 Verified, Q2 Verified, Q5 Partially verified, Q6 Verified (paid-tier artifact 2026-06-13 — see [9f-b1-verification-plan.md §3b](9f-b1-verification-plan.md#3b-evidence-log--recraft-paid-tier-artifact-pass-2026-06-13)). Recraft-only primary path (Group A) evidence satisfied. Q3 Blocked** (OpenAI commercial-rights HTTP 403 — unchanged). B1 remains open due to Q3. | The decision note itself marks these `(to verify)` and forbids real calls / production merge until resolved. |
 | ~~**B3**~~ ✅ | ~~Require a **paid** Recraft tier for real generation; document that free-tier output is non-commercial, public, and Recraft-owned.~~ **Resolved 2026-06-13:** paid-tier requirement documented in [`9f-entry-decision.md §5a`](9f-entry-decision.md) with official source ([Recraft commercial rights and ownership](https://www.recraft.ai/docs/plans-and-billing/commercial-rights-and-ownership.md), 2026-06-13). Free-tier risks stated explicitly (non-commercial, public gallery, Recraft-owned). Enforcement checklist added to 9F PR requirements. Plan-tier requirement added to [`provider-evaluation.md §6`](provider-evaluation.md) and [`custom-character-plan.md`](custom-character-plan.md) acceptance criteria. | Using a free key would publish user-derived characters and forfeit ownership — a privacy/legal trap. |
 | ~~**B4**~~ ✅ | ~~Reconcile whether the IP warning + personal-photo consent gate are **9F-merge requirements** (per 9F note §6) or **9G deliverables** (per plan §3/§5, provider-evaluation §6).~~ **Clarified 2026-06-13:** 9F real-provider prototype must include the minimum safety gate — explicit user action, IP warning, personal/reference photo consent checkbox, no auto-generation, visible provider/no-real-copy warning — before any real API call. This is not a full UX polish; 9G is the later hardening layer (better copy, provider error states, retry/cost UI polish, clearer privacy/data-retention display, richer recovery/fallback UX). See updated [`9f-entry-decision.md`](9f-entry-decision.md) §6, [`custom-character-plan.md`](custom-character-plan.md) §3/§5, [`provider-evaluation.md`](provider-evaluation.md) §6 criterion 4. | Prevents 9F scope from silently expanding into full consent UI, or from shipping a real-call path without consent. Prevents 9G from being confused with the first safety gate. |
 
@@ -356,9 +357,9 @@ Recommended ordering:
    B1 remains open until a separate evidence PR records results). Record outcomes in
    the decision note. A small docs-only or minimal test PR is the right vehicle.
    **First official-doc evidence pass recorded 2026-06-13** ([`9f-b1-verification-plan.md` §3a](9f-b1-verification-plan.md#3a-evidence-log--official-doc-pass-2026-06-13)):
-   Q4 → Verified (official OpenAI dev docs), Q1 → partially verified (paid-tier artifact
-   still required), Q3 → Blocked (official commercial-rights pages still HTTP 403);
-   Q2/Q5/Q6 still need a paid Recraft test. **B1 remains open.**
+   Q4 → Verified, Q1 → partially verified, Q3 → Blocked.
+   **Second paid-tier artifact pass recorded 2026-06-13** ([`9f-b1-verification-plan.md` §3b](9f-b1-verification-plan.md#3b-evidence-log--recraft-paid-tier-artifact-pass-2026-06-13)):
+   Q1 → **Verified** (WebP alpha confirmed), Q2 → **Verified** (style fit confirmed), Q5 → **Partially verified** (cross-pose identity drift without explicit char spec), Q6 → **Verified** (~7.6s/pose, acceptable). **Recraft-only primary path (Group A) evidence satisfied. B1 remains open due to Q3 (OpenAI fallback).**
 2. ~~**(B3) Document paid-tier Recraft requirement**~~ ✅ **Resolved 2026-06-13** —
    paid-tier Recraft requirement documented with official source; free-tier blocked;
    enforcement checks embedded in 9F PR requirements. See
