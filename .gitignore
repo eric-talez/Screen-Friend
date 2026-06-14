@@ -9,3 +9,6 @@ dist/
 .env
 .env.*
 !.env.example
+
+# Temporary scratch — B1 verification artifacts (never commit)
+tmp/

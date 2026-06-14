@@ -72,7 +72,7 @@ and official/third-party classification.
 | Current model ID (raster) | `recraftv4_1` | [Recraft API examples](https://www.recraft.ai/docs/api-reference/examples.md) | Official | 2026-06-13 |
 | Current model ID (vector) | `recraftv4_1_vector` | [Recraft API examples](https://www.recraft.ai/docs/api-reference/examples.md) | Official | 2026-06-13 |
 | Background removal endpoint | Available; "produces a transparent-background cutout" | [Recraft API getting started](https://www.recraft.ai/docs/api-reference/getting-started.md) | Official | 2026-06-13 |
-| Native gen alpha channel output | **(to verify)** — bg-removal endpoint confirmed; gen endpoint format not explicitly stated | [Recraft API getting started](https://www.recraft.ai/docs/api-reference/getting-started.md) | Official | 2026-06-13 |
+| Native gen alpha channel output | **Verified — paid-tier artifact 2026-06-13:** bg-removal output is **WebP with clean alpha**; actual transparent pixels confirmed via sips + pixel decode. Format is WebP (not PNG as docs implied), but alpha is clean and suitable for the overlay. V4.1 does not support the `style` parameter — omit from generation requests. See [9f-b1-verification-plan.md §3b](9f-b1-verification-plan.md#3b-evidence-log--recraft-paid-tier-artifact-pass-2026-06-13). | [Recraft API getting started](https://www.recraft.ai/docs/api-reference/getting-started.md) | Official | 2026-06-13 |
 | V4.1 raster price | $0.04/image | [Recraft API pricing](https://www.recraft.ai/docs/api-reference/pricing.md) | Official | 2026-06-13 |
 | V4.1 vector price | $0.08/image | [Recraft API pricing](https://www.recraft.ai/docs/api-reference/pricing.md) | Official | 2026-06-13 |
 | Background removal price | $0.01/request | [Recraft API pricing](https://www.recraft.ai/docs/api-reference/pricing.md) | Official | 2026-06-13 |
@@ -252,9 +252,15 @@ but they block any real API call with personal photos or production use.
 
 | # | Item | Blocker for |
 |---|---|---|
-| 1 | **Recraft remove-background output format** — confirm it produces transparent PNG (not WebP or other format) and that the alpha channel is clean enough for the overlay. **Partially verified 2026-06-13:** official docs confirm a "transparent-background cutout" claim, but no output file-format/alpha is documented for the endpoint — paid-tier artifact still required (see §3a). | 9F merge |
-| 2 | **Recraft V4.1 style fit** — empirical test generation needed (requires a paid-tier account and API key) | 9F merge |
+| 1 | **Recraft remove-background output format** — **Verified 2026-06-13 (paid-tier artifact):** output is **WebP** (not PNG as docs implied) with clean alpha channel; actual transparent pixels confirmed via sips + pixel decode. Suitable for overlay. V4.1 does not support the `style` parameter — omit from generation requests. See [9f-b1-verification-plan.md §3b](9f-b1-verification-plan.md#3b-evidence-log--recraft-paid-tier-artifact-pass-2026-06-13). | 9F merge |
+| 2 | **Recraft V4.1 style fit** — **Verified 2026-06-13 (paid-tier artifact):** flat clean 2D illustration style confirmed; suitable for desktop companion mascot. Explicit color specification required in prompt for cross-pose consistency. See [9f-b1-verification-plan.md §3b](9f-b1-verification-plan.md#3b-evidence-log--recraft-paid-tier-artifact-pass-2026-06-13). | 9F merge |
 | 3 | **OpenAI commercial rights for API outputs** — **Blocked 2026-06-13:** Usage Policies / Terms / Business / Services / Enterprise-privacy pages still return HTTP 403 (incl. browser-style UA); accessible dev docs do not cover output ownership. Must verify before using OpenAI as fallback in production (see §3a). | Production / OpenAI fallback |
 | 4 | **OpenAI data retention window and training opt-out** — **Verified 2026-06-13** via official OpenAI developer docs: not used to train by default; abuse-monitoring logs ≤ 30 days by default; ZDR / Modified Abuse Monitoring opt-out (see §3a). | Production / OpenAI fallback |
-| 5 | **Per-pose identity / consistency** — neither provider guarantees the same character across 7 separate generation calls; empirical testing needed to set realistic user expectations | 9F UX design |
-| 6 | **Recraft latency at generation + bg-removal** — acceptable for a foreground user-initiated flow; not verified empirically | 9F UX design |
+| 5 | **Per-pose identity / consistency** — **Partially verified 2026-06-13 (paid-tier artifact):** 7 poses generated and visually assessed. Individually readable and cute; however, color palette and body shape vary across text-only generation calls (color drift in 2 groups; 1 humanoid pose; 1 spider-limb pose). Explicit character spec or reference-image approach required for a consistent sprite set. See [9f-b1-verification-plan.md §3b](9f-b1-verification-plan.md#3b-evidence-log--recraft-paid-tier-artifact-pass-2026-06-13). | 9F UX design |
+| 6 | **Recraft latency at generation + bg-removal** — **Verified 2026-06-13 (paid-tier artifact):** avg ~5,400ms generation + ~2,200ms bg-removal = ~7,600ms per pose; acceptable for a foreground user-initiated one-time flow. See [9f-b1-verification-plan.md §3b](9f-b1-verification-plan.md#3b-evidence-log--recraft-paid-tier-artifact-pass-2026-06-13). | 9F UX design |
+
+> **Recraft-only primary path evidence satisfied (2026-06-13):** Q1 (WebP alpha confirmed)
+> and Q2 (style fit confirmed) are both Verified — see §3b of
+> [`9f-b1-verification-plan.md`](9f-b1-verification-plan.md). The §6 9F implementation
+> checklist is still required before any real-provider merge. **B1 remains open** due to Q3
+> (OpenAI fallback commercial-rights evidence still Blocked — item 3 above).
